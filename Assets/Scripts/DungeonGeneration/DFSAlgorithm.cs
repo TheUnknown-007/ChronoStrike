@@ -1,64 +1,64 @@
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
-using System;
 
 public class DFSAlgorithm : MonoBehaviour
 {
     public static DFSAlgorithm instance {get; private set;}
+    [SerializeField] Slider healthSlider;
     [SerializeField] GameObject[] room;
-    [SerializeField] Vector2 size;
+    [SerializeField] GameObject bossPrefab;
+    [SerializeField] GameObject sentryPrefab;
+    [SerializeField] GameObject enemyPrefab; 
+    [SerializeField] Vector2 sizeRange;
     [SerializeField] Vector2 offset;
     [SerializeField] int startPos = 0;
     int color;
     List<Cell> board;
     Dictionary<int, GameObject> instantiatedRooms;
+    int size;
 
     void Start()
     {
         instance = this;
+        size = Mathf.FloorToInt(UnityEngine.Random.Range(sizeRange.x, sizeRange.y));
         color = UnityEngine.Random.Range(0, room.Length);
         MazeGenerator();
     }
 
-    public void UpdateVisibility(int currentCell)
+    public void UpdateVisibility(int currentCell) // for optimization, non visible rooms are disabled
     {
-        for(int i = 0; i<size.x; i++)
-            for(int j = 0; j<size.y; j++)
+        for(int i = 0; i<size; i++)
+            for(int j = 0; j<size; j++)
             {
-                int cellToCheck = Mathf.FloorToInt(i+j*size.x);
+                int cellToCheck = Mathf.FloorToInt(i+j*size);
                 if(cellToCheck == currentCell || !instantiatedRooms.ContainsKey(cellToCheck)) continue;
 
                 if(
-                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[0] && (cellToCheck - size.x >= 0) && (cellToCheck - size.x == currentCell)) ||
-                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[1] && (cellToCheck + size.x < board.Count) && (cellToCheck + size.x == currentCell)) ||
-                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[3] && ((cellToCheck+1) % size.x != 0) && (cellToCheck + 1 == currentCell)) ||
-                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[2] && (cellToCheck % size.x != 0) && (cellToCheck - 1 == currentCell))
+                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[0] && (cellToCheck - size >= 0) && (cellToCheck - size == currentCell)) ||
+                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[1] && (cellToCheck + size < board.Count) && (cellToCheck + size == currentCell)) ||
+                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[3] && ((cellToCheck+1) % size != 0) && (cellToCheck + 1 == currentCell)) ||
+                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[2] && (cellToCheck % size != 0) && (cellToCheck - 1 == currentCell))
                 )
                     instantiatedRooms[cellToCheck].SetActive(true);
                 else
                     instantiatedRooms[cellToCheck].SetActive(false);
-                
-
-                
-                // print((cellToCheck - size.x >= 0) + " + " + (cellToCheck - size.x == currentCell));
-                // print((cellToCheck + size.x < board.Count) + " + " + (cellToCheck + size.x == currentCell));
-                // print(((cellToCheck+1) % size.x != 0) + " + " + (cellToCheck + 1 == currentCell));
-                // print((cellToCheck % size.x != 0) + " + " + (cellToCheck - 1 == currentCell));
             }
     }
 
-    void GenerateDungeon()
+    void GenerateDungeon() // spawns the rooms
     {
-        for(int i = 0; i<size.x; i++)
-            for(int j = 0; j<size.y; j++)
+        for(int i = 0; i<size; i++)
+            for(int j = 0; j<size; j++)
             {
-                Cell currentCell = board[Mathf.FloorToInt(i + j * size.x)];
+                Cell currentCell = board[Mathf.FloorToInt(i + j * size)];
                 if(currentCell.visited)
                 {
-                    int cellID = Mathf.FloorToInt(i + j * size.x);
+                    int cellID = Mathf.FloorToInt(i + j * size);
                     GameObject newRoom = Instantiate(room[color], new Vector3(i*offset.x, 0, -j*offset.y), Quaternion.identity, transform);
                     RoomBehaviour script = newRoom.GetComponent<RoomBehaviour>();
-                    script.UpdateRoom(cellID, board[cellID].status);
+                    if(cellID == board.Count-1) script.UpdateRoom(cellID, board[cellID].status, true, null, null, bossPrefab, healthSlider);
+                    else script.UpdateRoom(cellID, board[cellID].status, false, sentryPrefab, enemyPrefab, null, healthSlider);
                     newRoom.name += " " + i + ":" + j;
                     if(cellID != 0) newRoom.SetActive(false);
                     instantiatedRooms[cellID] = newRoom;
@@ -67,12 +67,12 @@ public class DFSAlgorithm : MonoBehaviour
 
     }
 
-    void MazeGenerator()
+    void MazeGenerator() // as the name suggests
     {
         instantiatedRooms = new Dictionary<int, GameObject>();
         board = new List<Cell>();
-        for(int i = 0; i<size.x; i++)
-            for(int j = 0; j<size.y; j++)
+        for(int i = 0; i<size; i++)
+            for(int j = 0; j<size; j++)
                 board.Add(new Cell());
 
         int currentCell = startPos;
@@ -135,16 +135,16 @@ public class DFSAlgorithm : MonoBehaviour
         List<int> neighbour = new List<int>();
         
         // Check Up Neighbour
-        if(cell - size.x >= 0 && !board[Mathf.FloorToInt(cell-size.x)].visited)
-            neighbour.Add(Mathf.FloorToInt(cell-size.x));
+        if(cell - size >= 0 && !board[Mathf.FloorToInt(cell-size)].visited)
+            neighbour.Add(Mathf.FloorToInt(cell-size));
         // Check Bottom Neighbour
-        if(cell + size.x < board.Count && !board[Mathf.FloorToInt(cell+size.x)].visited)
-            neighbour.Add(Mathf.FloorToInt(cell+size.x));
+        if(cell + size < board.Count && !board[Mathf.FloorToInt(cell+size)].visited)
+            neighbour.Add(Mathf.FloorToInt(cell+size));
         // Check Right Neighbour
-        if((cell+1) % size.x != 0 && !board[Mathf.FloorToInt(cell+1)].visited)
+        if((cell+1) % size != 0 && !board[Mathf.FloorToInt(cell+1)].visited)
             neighbour.Add(Mathf.FloorToInt(cell+1));
         // Check Left Neighbour
-        if(cell % size.x != 0 && !board[Mathf.FloorToInt(cell-1)].visited)
+        if(cell % size != 0 && !board[Mathf.FloorToInt(cell-1)].visited)
             neighbour.Add(Mathf.FloorToInt(cell-1));
 
         return neighbour;

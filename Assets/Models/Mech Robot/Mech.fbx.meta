@@ -3,7 +3,102 @@ guid: c87f04f739a795949adb11fc38d766e4
 ModelImporter:
   serializedVersion: 21300
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 0529f837b682e634cba1cb3dd4c2c501, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: col_black
+    second: {fileID: 2100000, guid: 00f0a6f1cd7de9a4aaab9d856e4b21f5, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: col_jok
+    second: {fileID: 2100000, guid: 9b499966727a81f4b97dc8a4c0f0c6e7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: col_kaca
+    second: {fileID: 2100000, guid: e651d4cdcf004ef42a6cac732547812b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: col_master_body_mech
+    second: {fileID: 2100000, guid: 40b16e2436e4112488fd3ab11734bf70, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: col_metal_1
+    second: {fileID: 2100000, guid: 173e6f9982883db4fadfcef13fae6c46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: col_reflection
+    second: {fileID: 2100000, guid: 8952b9f0ef062c44c9c2dbf152ef2500, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: col_silver
+    second: {fileID: 2100000, guid: f829241c7278229458c492d7820f3602, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: logo_zak
+    second: {fileID: 2100000, guid: 476b7488828dc3243addf2f7ee449866, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_ancle_yellow.R
+    second: {fileID: 2100000, guid: 697831fee77c4914584ebdcdffc91460, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_cookpit.L
+    second: {fileID: 2100000, guid: 5d9f9515a2ed78648a91d996fd13efac, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_foot_yellow.L
+    second: {fileID: 2100000, guid: b4ff161dc8e2f744ab22a4febe39906e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_mech
+    second: {fileID: 2100000, guid: c6e3169670274344c8b841b12af3887e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_mg_yellow.L
+    second: {fileID: 2100000, guid: f991577c442ed4b449dbe1f9d25af66c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_mg_yellow.R
+    second: {fileID: 2100000, guid: 40a2c0537960bce4e8f118e338676aad, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_mg_yellow2
+    second: {fileID: 2100000, guid: 20d035958d1436146a7fe1328308db4e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_missles.R
+    second: {fileID: 2100000, guid: c9e2c22b7e4e04e4e81e10dca29acc33, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_yellow_3
+    second: {fileID: 2100000, guid: 1f18695540c1aea4e99b3ba97ebee7d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: uv_yellow_4
+    second: {fileID: 2100000, guid: b52f45b552d922444923c47d2c18814a, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

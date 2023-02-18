@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -14,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     [SerializeField] Animator cameraAnimator;
     [SerializeField] CapsuleCollider playerCollider;
+    [SerializeField] float crouchWalkSpeed = 2;
     [SerializeField] float walkSpeed = 4;
     [SerializeField] float sprintSpeed = 6;
     [SerializeField] float acceleration = 10;
@@ -43,7 +42,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float walkFootstepDelay = 0.6f;
     [SerializeField] float runFootstepDelay = 1f;
     [SerializeField] float crouchFootstepDelay = 1.5f;
-    [SerializeField] List<AudioSource> audioClips;
     float tempFootstepDelay;
 
     [Header("Misc")]
@@ -83,8 +81,6 @@ public class PlayerMovement : MonoBehaviour
 
         defaultPos = cameraTransform.localPosition;
         defaultRot = cameraTransform.localRotation;
-
-        StartCoroutine(PlayFootstepSounds());
 
         // DEBUG
         //Application.targetFrameRate = fpsCap;
@@ -136,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
 
     void ControlSpeed()
     {
-        if(Input.GetKey(sprintKey) && isGrounded)
+        if(isGrounded && !isCrouched && Input.GetKey(sprintKey))
         {
             isRunning = true;
             tempFootstepDelay = runFootstepDelay;
@@ -145,8 +141,16 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             isRunning = false;
-            tempFootstepDelay = walkFootstepDelay;
-            moveSpeed = Mathf.Lerp(moveSpeed, walkSpeed, acceleration * Time.deltaTime);
+            if(isCrouched) 
+            {
+                tempFootstepDelay = crouchFootstepDelay;
+                moveSpeed = Mathf.Lerp(moveSpeed, crouchWalkSpeed, acceleration * 2 * Time.deltaTime);
+            }
+            else
+            {
+                tempFootstepDelay = walkFootstepDelay;
+                moveSpeed = Mathf.Lerp(moveSpeed, walkSpeed, acceleration * Time.deltaTime);
+            }
         }
     }
 
@@ -200,20 +204,4 @@ public class PlayerMovement : MonoBehaviour
     {
         transform.position = Vector3.zero + (Vector3.up * 2.4f);
     }
-
-    IEnumerator PlayFootstepSounds()
-    {
-        while (true)
-        {
-            if (!isMoving || !isGrounded)
-            {
-                yield return new WaitForSeconds(tempFootstepDelay/2);
-                continue;
-            }
-            random = Random.Range(0, audioClips.Count - 1);
-            audioClips[random].Play();
-            debugCount++;
-            yield return new WaitForSeconds(tempFootstepDelay);
-        }
-    } 
 }

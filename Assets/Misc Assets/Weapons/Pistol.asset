@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bc42b7c660fa1459e45acc4f857087, type: 3}
+  m_Name: Pistol
+  m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
+  automatic: 0
+  magSize: 17
+  lineLength: 0.5
+  fireRate: 0.2
+  spreadFactor: 0
+  bulletSpeed: 20
+  bulletDamage: 3
+  reloadTime: 0.75
+  collateralDamage: 0
+  collateralRadius: 0
+  gunSound: {fileID: 8300000, guid: 00df31a85f33e26408d2ba6564ccd025, type: 3}
+  impactParticles: {fileID: 5364804623089671519, guid: 67ed8b38ddf77e546868c61149b43f7c, type: 3}
+  bullet: {fileID: 7297281510608327928, guid: 74085a5acc8f40845842eb73f2260e5e, type: 3}
+  muzzleFlash: {fileID: 7561293926167957526, guid: 5001b74f878bb334593515184b74c55c, type: 3}
+  bulletColor:
+    serializedVersion: 2
+    key0: {r: 1, g: 0.8534628, b: 0, a: 1}
+    key1: {r: 1, g: 0.7038482, b: 0.5176471, a: 0}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 21974
+    ctime2: 48188
+    ctime3: 41056
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 38357
+    atime1: 65535
+    atime2: 65535
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
