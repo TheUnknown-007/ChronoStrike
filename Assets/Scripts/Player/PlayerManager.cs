@@ -36,9 +36,9 @@ public class PlayerManager : MonoBehaviour
 
     [HideInInspector] public bool isDead {get; private set;}
 
-    bool bossTriggered;
+    //bool bossTriggered;
     bool weaponPowerup;
-    int offScore;
+    //int offScore;
     int currentWeaponIndex = 0;
 
     bool armour;
@@ -79,7 +79,7 @@ public class PlayerManager : MonoBehaviour
 
     public void TriggerBoss()
     {
-        bossTriggered = true;
+        //bossTriggered = true;
         bossHealth.Play("PopIn");
         bossName.text = "Mr" + (new string[] {"Robot", "Evil", "Unknown", "Bot", "BlackHat"})[Random.Range(0,5)];
     }
@@ -121,7 +121,7 @@ public class PlayerManager : MonoBehaviour
 
     public void AddScore(int value)
     {
-        if(!weaponPowerup) offScore += value;
+        //if(!weaponPowerup) offScore += value;
         currentScore += value;
         scoreAddition.text = "+ " + value;
         scoreAddAnim.Play("Addition");
@@ -169,7 +169,8 @@ public class PlayerManager : MonoBehaviour
 
     void UpgradeWeapon()
     {
-        offScore = 0;
+        currentKills = 0;
+        //offScore = 0;
         if(currentWeaponIndex == weaponObjects.Length-1) return;
         weaponObjects[currentWeaponIndex].gameObject.SetActive(false);
         currentWeaponIndex += 1;

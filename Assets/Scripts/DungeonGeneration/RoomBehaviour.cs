@@ -41,7 +41,7 @@ public class RoomBehaviour : MonoBehaviour
         {
             int weaponSet = Random.Range(0, 2);
             if(weaponSet == 1)
-                Instantiate(bossPrefab, bossSpawnPoint.position, bossSpawnPoint.rotation, this.transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {bossWeapons[1], bossWeapons[0]}, 500, 3, healthSlider);
+                Instantiate(bossPrefab, bossSpawnPoint.position, bossSpawnPoint.rotation, this.transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {bossWeapons[1], bossWeapons[1]}, 500, 3, healthSlider);
             else
                 Instantiate(bossPrefab, bossSpawnPoint.position, bossSpawnPoint.rotation, this.transform).GetComponent<Enemy>().Init(bossWeapons, 500, 1.5f, healthSlider);
             return;

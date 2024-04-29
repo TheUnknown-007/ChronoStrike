@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bc42b7c660fa1459e45acc4f857087, type: 3}
   m_Name: EnemyRocketLauncher
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
+  upgradeKills: 0
   automatic: 0
   magSize: 2
   lineLength: 0
   fireRate: 0.5
+  burstRate: 0
+  bulletsPerBurst: 1
   spreadFactor: 3
   bulletSpeed: 15
   bulletDamage: 30
@@ -54,5 +57,6 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
+    m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2

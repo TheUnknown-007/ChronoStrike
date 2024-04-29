@@ -12,14 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bc42b7c660fa1459e45acc4f857087, type: 3}
   m_Name: MG
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
+  upgradeKills: 0
   automatic: 1
-  magSize: 100
+  magSize: 75
   lineLength: 3
-  fireRate: 0.05
-  spreadFactor: 2.5
-  bulletSpeed: 35
+  fireRate: 0.06
+  burstRate: 0
+  bulletsPerBurst: 0
+  spreadFactor: 1.5
+  bulletSpeed: 40
   bulletDamage: 2.5
-  reloadTime: 5
+  reloadTime: 4
   collateralDamage: 0
   collateralRadius: 0
   shake: 0
@@ -54,5 +57,6 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
+    m_ColorSpace: -1
     m_NumColorKeys: 4
     m_NumAlphaKeys: 2

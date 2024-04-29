@@ -8,6 +8,8 @@ public class ScriptableWeapon : ScriptableObject
     public int magSize;
     public float lineLength;
     public float fireRate;
+    public float burstRate;
+    public int bulletsPerBurst;
     public float spreadFactor;
     public float bulletSpeed;
     public float bulletDamage;

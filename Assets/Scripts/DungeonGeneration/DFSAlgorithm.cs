@@ -1,28 +1,34 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
+using System;
+
+[Serializable]
+public struct RoomType{
+    public GameObject[] variants;
+}
 
 public class DFSAlgorithm : MonoBehaviour
 {
     public static DFSAlgorithm instance {get; private set;}
     [SerializeField] Slider healthSlider;
-    [SerializeField] GameObject[] room;
+    [SerializeField] RoomType[] room;
     [SerializeField] GameObject bossPrefab;
     [SerializeField] GameObject sentryPrefab;
     [SerializeField] GameObject enemyPrefab; 
     [SerializeField] Vector2 sizeRange;
     [SerializeField] Vector2 offset;
     [SerializeField] int startPos = 0;
-    int color;
+    int roomType;
+    int size;
     List<Cell> board;
     Dictionary<int, GameObject> instantiatedRooms;
-    int size;
 
     void Start()
     {
         instance = this;
         size = Mathf.FloorToInt(UnityEngine.Random.Range(sizeRange.x, sizeRange.y));
-        color = UnityEngine.Random.Range(0, room.Length);
+        roomType = UnityEngine.Random.Range(0, room.Length);
         MazeGenerator();
     }
 
@@ -55,7 +61,7 @@ public class DFSAlgorithm : MonoBehaviour
                 if(currentCell.visited)
                 {
                     int cellID = Mathf.FloorToInt(i + j * size);
-                    GameObject newRoom = Instantiate(room[color], new Vector3(i*offset.x, 0, -j*offset.y), Quaternion.identity, transform);
+                    GameObject newRoom = Instantiate(room[roomType].variants[UnityEngine.Random.Range(0, room[roomType].variants.Length)], new Vector3(i*offset.x, 0, -j*offset.y), Quaternion.identity, transform);
                     RoomBehaviour script = newRoom.GetComponent<RoomBehaviour>();
                     if(cellID == board.Count-1) script.UpdateRoom(cellID, board[cellID].status, true, null, null, bossPrefab, healthSlider);
                     else script.UpdateRoom(cellID, board[cellID].status, false, sentryPrefab, enemyPrefab, null, healthSlider);
