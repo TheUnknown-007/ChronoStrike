@@ -37,7 +37,7 @@ public class CameraController : MonoBehaviour
         TakeInput();
 
         camera.transform.position = currentPos.position;
-        camera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, wallrunScript.currentTilt);
+        camera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
         GunHandler.rotation = camera.transform.rotation;
     }

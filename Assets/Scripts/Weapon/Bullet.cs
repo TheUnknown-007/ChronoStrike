@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
         line = GetComponent<LineRenderer>();
         line.colorGradient = bulletColor;
         Shake = shake;
-        StartCoroutine(DestroyInSeconds());
+        Destroy(gameObject, 3);
     }
 
     void Update()
@@ -40,12 +40,6 @@ public class Bullet : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, transform.position + transform.forward, BulletSpeed*Time.deltaTime);
         line.SetPosition(0, transform.position);
         line.SetPosition(1, transform.position - transform.forward * LineLength);
-    }
-
-    IEnumerator DestroyInSeconds()
-    {
-        yield return new WaitForSeconds(3);
-        Destroy(gameObject);
     }
 
     void OnTriggerEnter(Collider other)
@@ -56,7 +50,7 @@ public class Bullet : MonoBehaviour
             if(other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("BossEnemy"))
             {
                 other.gameObject.GetComponent<Enemy>().AddDamage(BulletDamage);
-                Destroy(Instantiate(ImpactParticles, transform.position, transform.rotation), 1);
+                Destroy(Instantiate(ImpactParticles, transform.position, transform.rotation), 2);
             }
             else if(other.gameObject.CompareTag("Player")) return;
         }
@@ -66,7 +60,7 @@ public class Bullet : MonoBehaviour
             else if(other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("BossEnemy")) return;
         }
 
-        Destroy(Instantiate(ImpactParticles, transform.position, transform.rotation), 1);
+        Destroy(Instantiate(ImpactParticles, transform.position, transform.rotation), 2);
 
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, CollateralRadius);
         foreach (var hitCollider in hitColliders)

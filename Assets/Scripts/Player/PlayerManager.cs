@@ -29,9 +29,10 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] Slider armorSlide;
     [SerializeField] TMP_Text bullets;
     [SerializeField] Slider bulletsSlide;
-    [Space, SerializeField] GameObject[] weapons;
+    [Space, SerializeField] Weapon[] weaponObjects;
     [SerializeField] int secondsPerWeapon;
     [SerializeField] GameObject weaponMG;
+    int currentKills = 0;
 
     [HideInInspector] public bool isDead {get; private set;}
 
@@ -58,7 +59,7 @@ public class PlayerManager : MonoBehaviour
         armor.text = "0";
         bulletsSlide.value = 1;
         bullets.text = "17";
-        weapons[currentWeaponIndex].SetActive(true);
+        weaponObjects[currentWeaponIndex].gameObject.SetActive(true);
         highScore = PlayerPrefs.GetInt("Highscore", 0);
         if(gameplayState.continuePlay) 
         {
@@ -107,7 +108,7 @@ public class PlayerManager : MonoBehaviour
     void Die()
     {
         isDead = true;
-        weapons[currentWeaponIndex].SetActive(false);
+        weaponObjects[currentWeaponIndex].gameObject.SetActive(false);
         fade.Play("FadeIn");
         gameOverScreen.SetActive(true);
     }
@@ -125,8 +126,9 @@ public class PlayerManager : MonoBehaviour
         scoreAddition.text = "+ " + value;
         scoreAddAnim.Play("Addition");
         score.text = "Score: " + currentScore;
+        currentKills++;
         if(currentScore > highScore)  score.color = highScoreColor;
-        if(!weaponPowerup && offScore >= (100+(currentWeaponIndex*50))) UpgradeWeapon();
+        if(!weaponPowerup && currentKills >= weaponObjects[currentWeaponIndex].weaponData.upgradeKills) UpgradeWeapon();
     }
 
     public void AmmoChange(float total, float newValue)
@@ -155,23 +157,23 @@ public class PlayerManager : MonoBehaviour
     public IEnumerator GiveMG()
     {
         soundSource.PlayOneShot(powerup);
-        if(currentWeaponIndex == weapons.Length-1) weapons[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
+        if(currentWeaponIndex == weaponObjects.Length-1) weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
         weaponPowerup = true;
-        weapons[currentWeaponIndex].SetActive(false);
+        weaponObjects[currentWeaponIndex].gameObject.SetActive(false);
         weaponMG.SetActive(true);
         yield return new WaitForSeconds(secondsPerWeapon);
         weaponMG.SetActive(false);
-        weapons[currentWeaponIndex].SetActive(true);
+        weaponObjects[currentWeaponIndex].gameObject.SetActive(true);
         weaponPowerup = false;
     }
 
     void UpgradeWeapon()
     {
         offScore = 0;
-        if(currentWeaponIndex == weapons.Length-1) return;
-        weapons[currentWeaponIndex].SetActive(false);
+        if(currentWeaponIndex == weaponObjects.Length-1) return;
+        weaponObjects[currentWeaponIndex].gameObject.SetActive(false);
         currentWeaponIndex += 1;
-        weapons[currentWeaponIndex].SetActive(true);
+        weaponObjects[currentWeaponIndex].gameObject.SetActive(true);
     }
 
     public void DefeatBoss()

@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Weapon", menuName = "Weapon")]
 public class ScriptableWeapon : ScriptableObject
 {   
+    public int upgradeKills;
     public bool automatic;
     public int magSize;
     public float lineLength;

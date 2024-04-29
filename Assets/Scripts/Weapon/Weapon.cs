@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] ScriptableWeapon weaponData;
+    public ScriptableWeapon weaponData;
     [SerializeField] Animator GunAnim;
     [SerializeField] AudioSource audioSource;
     [SerializeField] Transform bulletPoint;
