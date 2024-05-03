@@ -16,13 +16,13 @@ MonoBehaviour:
   automatic: 0
   magSize: 7
   lineLength: 0.75
-  fireRate: 0.45
+  fireRate: 0.75
   burstRate: 0
   bulletsPerBurst: 1
   spreadFactor: 0
-  bulletSpeed: 50
+  bulletSpeed: 40
   bulletDamage: 30
-  reloadTime: 0.75
+  reloadTime: 1.5
   collateralDamage: 0
   collateralRadius: 0
   shake: 0

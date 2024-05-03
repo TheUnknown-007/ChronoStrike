@@ -10544,8 +10544,8 @@ ReflectionProbe:
   m_TimeSlicingMode: 0
   m_Resolution: 16
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 45, y: 10, z: 45}
-  m_BoxOffset: {x: 0, y: 0, z: 0}
+  m_BoxSize: {x: 42.210693, y: 13.920325, z: 42.200897}
+  m_BoxOffset: {x: -0.0654974, y: 1.9601626, z: 0.5117645}
   m_NearClip: 0.3
   m_FarClip: 100
   m_ShadowDistance: 100
@@ -10555,7 +10555,7 @@ ReflectionProbe:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IntensityMultiplier: 1
-  m_BlendDistance: 1
+  m_BlendDistance: 4
   m_HDR: 1
   m_BoxProjection: 0
   m_RenderDynamicObjects: 0

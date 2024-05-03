@@ -24,6 +24,7 @@ public class Enemy : MonoBehaviour
     float currentHealth;
     float totalHealth;
     ScriptableWeapon[] currentWeapons;
+    bool alive = true;
 
     public void Init(ScriptableWeapon[] weapon, float health, float fireDelay, Slider healthSlider)
     {
@@ -89,11 +90,12 @@ public class Enemy : MonoBehaviour
     {
         currentHealth -= damage;
         if(type == 1) HealthSlider.value = currentHealth / totalHealth;
-        if(currentHealth <= 0) Die();
+        if(currentHealth <= 0 && alive) Die();
     }
 
     void Die()
     {
+        alive = false;
         PlayerManager.instance.AddScore(reward);
         if(type == 1) PlayerManager.instance.DefeatBoss();
         CameraEffects.ShakeOnce();

@@ -21,10 +21,10 @@ MonoBehaviour:
   bulletsPerBurst: 1
   spreadFactor: 3
   bulletSpeed: 25
-  bulletDamage: 30
+  bulletDamage: 50
   reloadTime: 3
-  collateralDamage: 20
-  collateralRadius: 3
+  collateralDamage: 35
+  collateralRadius: 5
   shake: 1
   gunSound: {fileID: 8300000, guid: 7a2d43efa888aa5489eb426ea3f29e06, type: 3}
   impactParticles: {fileID: 364776266275441260, guid: 955f9b56adb8a7c4abd2819c915d7b33, type: 3}

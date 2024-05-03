@@ -20,7 +20,7 @@ MonoBehaviour:
   burstRate: 0
   bulletsPerBurst: 1
   spreadFactor: 0
-  bulletSpeed: 20
+  bulletSpeed: 30
   bulletDamage: 3
   reloadTime: 0.75
   collateralDamage: 0

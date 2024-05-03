@@ -121,7 +121,6 @@ public class PlayerManager : MonoBehaviour
 
     public void AddScore(int value)
     {
-        //if(!weaponPowerup) offScore += value;
         currentScore += value;
         scoreAddition.text = "+ " + value;
         scoreAddAnim.Play("Addition");
