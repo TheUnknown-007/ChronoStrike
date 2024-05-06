@@ -22,7 +22,7 @@ MonoBehaviour:
   spreadFactor: 2.5
   bulletSpeed: 35
   bulletDamage: 3.4
-  reloadTime: 1
+  reloadTime: 1.5
   collateralDamage: 0
   collateralRadius: 0
   shake: 0
