@@ -29,7 +29,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] Slider armorSlide;
     [SerializeField] TMP_Text bullets;
     [SerializeField] Slider bulletsSlide;
-    [Space, SerializeField] Weapon[] weaponObjects;
+    [Space, SerializeField] GameObject[] weaponObjects;
     [SerializeField] int secondsPerWeapon;
     [SerializeField] GameObject weaponMG;
     int currentKills = 0;
@@ -59,7 +59,7 @@ public class PlayerManager : MonoBehaviour
         armor.text = "0";
         bulletsSlide.value = 1;
         bullets.text = "17";
-        weaponObjects[currentWeaponIndex].gameObject.SetActive(true);
+        weaponObjects[currentWeaponIndex].SetActive(true);
         highScore = PlayerPrefs.GetInt("Highscore", 0);
         if(gameplayState.continuePlay) 
         {
@@ -108,7 +108,7 @@ public class PlayerManager : MonoBehaviour
     void Die()
     {
         isDead = true;
-        weaponObjects[currentWeaponIndex].gameObject.SetActive(false);
+        weaponObjects[currentWeaponIndex].SetActive(false);
         fade.Play("FadeIn");
         gameOverScreen.SetActive(true);
     }
@@ -127,7 +127,7 @@ public class PlayerManager : MonoBehaviour
         score.text = "Score: " + currentScore;
         currentKills++;
         if(currentScore > highScore)  score.color = highScoreColor;
-        if(!weaponPowerup && currentKills >= weaponObjects[currentWeaponIndex].weaponData.upgradeKills) UpgradeWeapon();
+        if(!weaponPowerup && currentKills >= weaponObjects[currentWeaponIndex].GetComponent<Weapon>().weaponData.upgradeKills) UpgradeWeapon();
     }
 
     public void AmmoChange(float total, float newValue)
@@ -158,11 +158,11 @@ public class PlayerManager : MonoBehaviour
         soundSource.PlayOneShot(powerup);
         if(currentWeaponIndex == weaponObjects.Length-1) weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
         weaponPowerup = true;
-        weaponObjects[currentWeaponIndex].gameObject.SetActive(false);
+        weaponObjects[currentWeaponIndex].SetActive(false);
         weaponMG.SetActive(true);
         yield return new WaitForSeconds(secondsPerWeapon);
         weaponMG.SetActive(false);
-        weaponObjects[currentWeaponIndex].gameObject.SetActive(true);
+        weaponObjects[currentWeaponIndex].SetActive(true);
         weaponPowerup = false;
     }
 
@@ -171,9 +171,9 @@ public class PlayerManager : MonoBehaviour
         currentKills = 0;
         //offScore = 0;
         if(currentWeaponIndex == weaponObjects.Length-1) return;
-        weaponObjects[currentWeaponIndex].gameObject.SetActive(false);
+        weaponObjects[currentWeaponIndex].SetActive(false);
         currentWeaponIndex += 1;
-        weaponObjects[currentWeaponIndex].gameObject.SetActive(true);
+        weaponObjects[currentWeaponIndex].SetActive(true);
     }
 
     public void DefeatBoss()

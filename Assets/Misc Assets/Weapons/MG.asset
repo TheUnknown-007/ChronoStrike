@@ -15,14 +15,17 @@ MonoBehaviour:
   upgradeKills: 0
   automatic: 1
   magSize: 75
-  lineLength: 3
   fireRate: 0.06
   burstRate: 0
   bulletsPerBurst: 0
   spreadFactor: 1.5
   bulletSpeed: 40
   bulletDamage: 2.5
+  lineLength: 5
   reloadTime: 4
+  recoilMagnitude: -3
+  recoilReturnSpeed: 5
+  recoilSnappines: 10
   collateralDamage: 0
   collateralRadius: 0
   shake: 0

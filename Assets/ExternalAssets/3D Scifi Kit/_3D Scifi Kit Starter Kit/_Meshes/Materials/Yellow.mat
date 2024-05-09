@@ -29,7 +29,9 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats: []
+    m_Floats:
+    - _GlossyReflections: 0
+    - _SpecularHighlights: 0
     m_Colors:
     - _EmissionColor: {r: 1.781479, g: 1.5782192, b: 0.6342435, a: 1}
   m_BuildTextureStacks: []
