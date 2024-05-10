@@ -19,9 +19,9 @@ MonoBehaviour:
   burstRate: 0
   bulletsPerBurst: 0
   spreadFactor: 3
-  bulletSpeed: 30
+  bulletSpeed: 35
   bulletDamage: 2.5
-  lineLength: 0.75
+  lineLength: 0.5
   reloadTime: 1.25
   recoilMagnitude: -2
   recoilReturnSpeed: 5
@@ -32,7 +32,7 @@ MonoBehaviour:
   gunSound: {fileID: 8300000, guid: 3c83657f411d82d458c7e8423388f6f0, type: 3}
   impactParticles: {fileID: 5364804623089671519, guid: 67ed8b38ddf77e546868c61149b43f7c, type: 3}
   bullet: {fileID: 7297281510608327928, guid: 74085a5acc8f40845842eb73f2260e5e, type: 3}
-  muzzleFlash: {fileID: 7561293926167957526, guid: 0387a69d269b6bc4caba1210e26fc747, type: 3}
+  muzzleFlash: {fileID: 7561293926167957526, guid: bbc98b9ae65c29349bb7094f4fa9a57e, type: 3}
   bulletColor:
     serializedVersion: 2
     key0: {r: 0.956295, g: 1, b: 0, a: 1}
