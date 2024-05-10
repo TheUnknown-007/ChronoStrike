@@ -24,8 +24,8 @@ MonoBehaviour:
   lineLength: 5
   reloadTime: 4
   recoilMagnitude: -3
-  recoilReturnSpeed: 5
-  recoilSnappines: 10
+  recoilReturnSpeed: 3
+  recoilSnappines: 20
   collateralDamage: 0
   collateralRadius: 0
   shake: 0

@@ -23,9 +23,9 @@ MonoBehaviour:
   bulletDamage: 2.5
   lineLength: 0.75
   reloadTime: 1.25
-  recoilMagnitude: -1
+  recoilMagnitude: -2
   recoilReturnSpeed: 5
-  recoilSnappines: 10
+  recoilSnappines: 20
   collateralDamage: 0
   collateralRadius: 0
   shake: 0
