@@ -7503,7 +7503,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2025499964
 Transform:
   m_ObjectHideFlags: 0
@@ -9024,7 +9024,7 @@ MonoBehaviour:
   bullets: {fileID: 211767666}
   bulletsSlide: {fileID: 1839772379}
   weaponObjects:
-  - {fileID: 2025499963}
+  - {fileID: 1005942409}
   - {fileID: 1872004757}
   - {fileID: 1054257447}
   - {fileID: 466748160414423936}

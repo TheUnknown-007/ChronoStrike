@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bc42b7c660fa1459e45acc4f857087, type: 3}
   m_Name: Mac
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
-  upgradeKills: 3
+  upgradeKills: 5
   automatic: 1
   magSize: 40
   fireRate: 0.04
@@ -23,8 +23,8 @@ MonoBehaviour:
   bulletDamage: 1.5
   lineLength: 0.75
   reloadTime: 1.5
-  recoilMagnitude: -2
-  recoilReturnSpeed: 5
+  recoilMagnitude: -3
+  recoilReturnSpeed: 7
   recoilSnappines: 10
   collateralDamage: 0
   collateralRadius: 0
