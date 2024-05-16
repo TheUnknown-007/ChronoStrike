@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -36,6 +35,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] int secondsPerWeapon;
     [SerializeField] GameObject weaponMG;
     [SerializeField] Transform recoilObject;
+    [SerializeField] Transform weaponRecoilObject;
     [SerializeField] float flinchMagnitude;
     [SerializeField] float flinchReturnSpeed;
     [SerializeField] float flinchSnappiness;
@@ -57,10 +57,10 @@ public class PlayerManager : MonoBehaviour
 
     Vector3 currentRotation;
     Vector3 targetRotation;
+    Vector3 currentRotation2;
+    Vector3 targetRotation2;
     float currentReturnSpeed;
     float currentSnappiness;
-    float targetOpacity;
-    float currentOpacity;
 
     void Awake()
     {
@@ -98,10 +98,15 @@ public class PlayerManager : MonoBehaviour
 
     void Update()
     {
-        // Recoil
+        // Camera Recoil
         targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, currentReturnSpeed * Time.deltaTime);
         currentRotation = Vector3.Slerp(currentRotation, targetRotation, currentSnappiness * Time.fixedDeltaTime);
         recoilObject.localRotation = Quaternion.Euler(currentRotation);
+        
+        // Weapon Recoil
+        targetRotation2 = Vector3.Lerp(targetRotation2, Vector3.zero, currentReturnSpeed * Time.deltaTime);
+        currentRotation2 = Vector3.Slerp(currentRotation2, targetRotation2, currentSnappiness * Time.fixedDeltaTime);
+        weaponRecoilObject.localRotation = Quaternion.Euler(currentRotation2);
 
         // Hit Effect
         hitEffect.color = new Color(hitEffect.color.r, hitEffect.color.g, hitEffect.color.b, Mathf.Lerp(hitEffect.color.a, 0, Time.deltaTime*effectDisappearSpeed));
@@ -116,7 +121,8 @@ public class PlayerManager : MonoBehaviour
 
     public void AddRecoil(float recoilMagnitude, float returnSpeed, float returnSnappiness)
     {
-        targetRotation += Vector3.right * recoilMagnitude;
+        targetRotation += Vector3.right * recoilMagnitude + Vector3.up * Random.Range(-recoilMagnitude*0.5f, recoilMagnitude*0.5f);
+        targetRotation2 += Vector3.right * recoilMagnitude*1.5f;
         currentReturnSpeed = returnSpeed;
         currentSnappiness = returnSnappiness;
     }

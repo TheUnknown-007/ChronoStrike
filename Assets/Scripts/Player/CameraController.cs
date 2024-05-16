@@ -8,8 +8,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] Transform camTransform;
     [SerializeField] Transform camPos;
     [SerializeField] Transform orientation;
-    [SerializeField] WallRunning wallrunScript;
     [SerializeField] Transform GunHandler;
+    [SerializeField] Transform GunParent;
 
     Transform currentPos;
 
@@ -41,7 +41,7 @@ public class CameraController : MonoBehaviour
         mainCamera.transform.position = currentPos.position;
         mainCamera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
-        GunHandler.rotation = mainCamera.transform.rotation;
+        GunParent.rotation = mainCamera.transform.rotation;
     }
 
     void LateUpdate()

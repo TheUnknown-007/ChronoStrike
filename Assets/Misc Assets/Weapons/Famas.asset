@@ -20,10 +20,10 @@ MonoBehaviour:
   bulletsPerBurst: 3
   spreadFactor: 2.5
   bulletSpeed: 50
-  bulletDamage: 5
+  bulletDamage: 10
   lineLength: 3
   reloadTime: 1
-  recoilMagnitude: -7
+  recoilMagnitude: -10
   recoilReturnSpeed: 10
   recoilSnappines: 20
   swaySmooth: 8

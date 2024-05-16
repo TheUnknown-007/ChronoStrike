@@ -23,8 +23,8 @@ MonoBehaviour:
   bulletDamage: 5
   lineLength: 2.5
   reloadTime: 0.75
-  recoilMagnitude: -4
-  recoilReturnSpeed: 10
+  recoilMagnitude: -10
+  recoilReturnSpeed: 7
   recoilSnappines: 10
   swaySmooth: 9
   swayMultiplier: 3
