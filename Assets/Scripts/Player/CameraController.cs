@@ -4,7 +4,7 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] float sensX = 6f;
     [SerializeField] float sensY = 6f;
-    [SerializeField] Transform camera;
+    [SerializeField] Transform mainCamera;
     [SerializeField] Transform camTransform;
     [SerializeField] Transform camPos;
     [SerializeField] Transform orientation;
@@ -13,8 +13,8 @@ public class CameraController : MonoBehaviour
 
     Transform currentPos;
 
-    float mouseX;
-    float mouseY;
+    public float mouseX;
+    public float mouseY;
     float multiplier = 0.01f;
     float xRotation;
     float yRotation;
@@ -28,18 +28,20 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if(PlayerManager.instance.isDead)
+        if(PlayerManager.instance.isDead) return;
+
+        if(Input.GetButtonDown("Fire1"))
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         TakeInput();
 
-        camera.transform.position = currentPos.position;
-        camera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
+        mainCamera.transform.position = currentPos.position;
+        mainCamera.transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0);
         orientation.rotation = Quaternion.Euler(0, yRotation, 0);
-        GunHandler.rotation = camera.transform.rotation;
+        GunHandler.rotation = mainCamera.transform.rotation;
     }
 
     void LateUpdate()

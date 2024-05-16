@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -29,9 +30,15 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] Slider armorSlide;
     [SerializeField] TMP_Text bullets;
     [SerializeField] Slider bulletsSlide;
+    [SerializeField] Image hitEffect;
+    [SerializeField] float effectDisappearSpeed;
     [Space, SerializeField] GameObject[] weaponObjects;
     [SerializeField] int secondsPerWeapon;
     [SerializeField] GameObject weaponMG;
+    [SerializeField] Transform recoilObject;
+    [SerializeField] float flinchMagnitude;
+    [SerializeField] float flinchReturnSpeed;
+    [SerializeField] float flinchSnappiness;
     int currentKills = 0;
 
     [HideInInspector] public bool isDead {get; private set;}
@@ -47,6 +54,13 @@ public class PlayerManager : MonoBehaviour
     int currentScore = 0;
     int highScore;
     int waveCount;
+
+    Vector3 currentRotation;
+    Vector3 targetRotation;
+    float currentReturnSpeed;
+    float currentSnappiness;
+    float targetOpacity;
+    float currentOpacity;
 
     void Awake()
     {
@@ -77,6 +91,22 @@ public class PlayerManager : MonoBehaviour
         Music[Mathf.FloorToInt(Random.Range(0, Music.Length-1))].Play();
     }
 
+    void Start()
+    {
+        DFSAlgorithm.instance.UpdateVisibility(0);
+    }
+
+    void Update()
+    {
+        // Recoil
+        targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, currentReturnSpeed * Time.deltaTime);
+        currentRotation = Vector3.Slerp(currentRotation, targetRotation, currentSnappiness * Time.fixedDeltaTime);
+        recoilObject.localRotation = Quaternion.Euler(currentRotation);
+
+        // Hit Effect
+        hitEffect.color = new Color(hitEffect.color.r, hitEffect.color.g, hitEffect.color.b, Mathf.Lerp(hitEffect.color.a, 0, Time.deltaTime*effectDisappearSpeed));
+    }
+
     public void TriggerBoss()
     {
         //bossTriggered = true;
@@ -84,12 +114,21 @@ public class PlayerManager : MonoBehaviour
         bossName.text = "Mr" + (new string[] {"Robot", "Evil", "Unknown", "Bot", "BlackHat"})[Random.Range(0,5)];
     }
 
+    public void AddRecoil(float recoilMagnitude, float returnSpeed, float returnSnappiness)
+    {
+        targetRotation += Vector3.right * recoilMagnitude;
+        currentReturnSpeed = returnSpeed;
+        currentSnappiness = returnSnappiness;
+    }
+
     public void AddDamage(float damage)
     {
+        hitEffect.color = new Color(hitEffect.color.r, hitEffect.color.g, hitEffect.color.b, 0.25f);
+        AddRecoil(flinchMagnitude, flinchReturnSpeed, flinchSnappiness);
         soundSource.PlayOneShot(hurt);
         if(armour) 
         {
-            float newVal = damage*2 / (armourDurability*0.25f);
+            float newVal = damage*1.5f / (armourDurability*0.25f);
             currentHealth -= newVal;
             armourDurability -= damage - newVal;
             armorSlide.value = armourDurability/50;
@@ -108,6 +147,10 @@ public class PlayerManager : MonoBehaviour
     void Die()
     {
         isDead = true;
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         weaponObjects[currentWeaponIndex].SetActive(false);
         fade.Play("FadeIn");
         gameOverScreen.SetActive(true);
@@ -169,7 +212,6 @@ public class PlayerManager : MonoBehaviour
     void UpgradeWeapon()
     {
         currentKills = 0;
-        //offScore = 0;
         if(currentWeaponIndex == weaponObjects.Length-1) return;
         weaponObjects[currentWeaponIndex].SetActive(false);
         currentWeaponIndex += 1;

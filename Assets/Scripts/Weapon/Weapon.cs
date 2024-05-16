@@ -1,20 +1,22 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 public class Weapon : MonoBehaviour
 {
     public ScriptableWeapon weaponData;
-    [SerializeField] Transform recoilObject;
     [SerializeField] Animator GunAnim;
     [SerializeField] AudioSource audioSource;
     [SerializeField] Transform[] bulletPoints;
+    
+    [Space, SerializeField] CameraController player;
+    [SerializeField] Transform[] weaponModels;
+    [SerializeField] Transform recoilObject;
+
     bool canFire;
     bool firing;
     bool reloading;
     int magCount;
-
-    Vector3 currentRotation;
-    Vector3 targetRotation;
 
     void Start()
     {
@@ -30,11 +32,15 @@ public class Weapon : MonoBehaviour
 
     void Update()
     {
-        // Recoil
-        targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, weaponData.recoilReturnSpeed * Time.deltaTime);
-        currentRotation = Vector3.Slerp(currentRotation, targetRotation, weaponData.recoilSnappines * Time.fixedDeltaTime);
-        recoilObject.localRotation = Quaternion.Euler(currentRotation);
-        
+        // Weapon Sway
+        foreach(Transform wM in weaponModels)
+        {
+            Quaternion rotationY = Quaternion.AngleAxis(-player.mouseY * weaponData.swayMultiplier, wM.right);
+            Quaternion rotationX = Quaternion.AngleAxis(player.mouseX * weaponData.swayMultiplier, wM.up);
+            Quaternion targetRotationS = rotationX * rotationY;
+            wM.transform.localRotation = Quaternion.Slerp(wM.transform.localRotation, targetRotationS, weaponData.swaySmooth * Time.deltaTime);
+        }
+
         if(canFire && !firing && Input.GetButtonDown("Fire1")) StartCoroutine(Shoot());
         if(firing && weaponData.automatic && Input.GetButtonUp("Fire1")) 
         {
@@ -81,8 +87,7 @@ public class Weapon : MonoBehaviour
 
     void ShootWeapon()
     {
-        targetRotation += new Vector3(weaponData.recoilMagnitude, 0, 0);
-
+        PlayerManager.instance.AddRecoil(weaponData.recoilMagnitude, weaponData.recoilReturnSpeed, weaponData.recoilSnappines);
         PlayerManager.instance.AmmoChange(weaponData.magSize, magCount);
         audioSource.PlayOneShot(weaponData.gunSound);
         float xRot = Random.Range(-weaponData.spreadFactor, weaponData.spreadFactor);

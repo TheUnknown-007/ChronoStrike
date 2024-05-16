@@ -40,8 +40,7 @@ public class DFSAlgorithm : MonoBehaviour
                 int cellToCheck = Mathf.FloorToInt(i+j*size);
                 if(cellToCheck == currentCell || !instantiatedRooms.ContainsKey(cellToCheck)) continue;
 
-                if(
-                    (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[0] && (cellToCheck - size >= 0) && (cellToCheck - size == currentCell)) ||
+                if( (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[0] && (cellToCheck - size >= 0) && (cellToCheck - size == currentCell)) ||
                     (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[1] && (cellToCheck + size < board.Count) && (cellToCheck + size == currentCell)) ||
                     (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[3] && ((cellToCheck+1) % size != 0) && (cellToCheck + 1 == currentCell)) ||
                     (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[2] && (cellToCheck % size != 0) && (cellToCheck - 1 == currentCell))

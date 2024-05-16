@@ -17,6 +17,8 @@ public class ScriptableWeapon : ScriptableObject
     public float recoilMagnitude;
     public float recoilReturnSpeed;
     public float recoilSnappines;
+    public float swaySmooth;
+    public float swayMultiplier;
     public float collateralDamage;
     public float collateralRadius;
     public bool shake;

@@ -26,6 +26,8 @@ MonoBehaviour:
   recoilMagnitude: -4
   recoilReturnSpeed: 10
   recoilSnappines: 10
+  swaySmooth: 9
+  swayMultiplier: 3
   collateralDamage: 0
   collateralRadius: 0
   shake: 0

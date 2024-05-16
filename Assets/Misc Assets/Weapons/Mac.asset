@@ -25,7 +25,9 @@ MonoBehaviour:
   reloadTime: 1.5
   recoilMagnitude: -3
   recoilReturnSpeed: 7
-  recoilSnappines: 10
+  recoilSnappines: 7
+  swaySmooth: 8
+  swayMultiplier: 8
   collateralDamage: 0
   collateralRadius: 0
   shake: 0
