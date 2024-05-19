@@ -11,7 +11,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float jumpForce = 15;
 
     [Header("Movement")]
-    [SerializeField] float walkSpeed = 4;
+    [SerializeField] float enhancedMaxVel = 20;
+    [SerializeField] float maxVelocity = 12;
+    [SerializeField] float walkSpeed = 65;
+    [SerializeField] float enhancedSpeed = 80;
     [SerializeField] float acceleration = 10;
     [SerializeField] float airMultiplier = 0.5f;
 
@@ -23,20 +26,17 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float groundDrag = 6;
     [SerializeField] float airDrag = 2;
 
-    [Header("Footsteps Parameters")]
-    [SerializeField] float walkFootstepDelay = 0.6f;
 
 
     [Header("Keybinds")]
     [SerializeField] KeyCode jumpkey = KeyCode.Space;
 
+    [HideInInspector] public bool isEnhanced;
     bool isMoving;
     bool isGrounded;
     float moveSpeed;
     float verticalMovement;
     float horizontalMovement;
-
-    float maxMoveVelocity;
 
     Vector3 moveDirection;
     Rigidbody rb;
@@ -52,25 +52,27 @@ public class PlayerMovement : MonoBehaviour
     {
         if(PlayerManager.instance.isDead) return;
         isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, playerHeight/2+0.1f, groundMask);
-        moveSpeed = Mathf.Lerp(moveSpeed, walkSpeed, acceleration * Time.deltaTime);
+        moveSpeed = Mathf.Lerp(moveSpeed, isEnhanced ? enhancedSpeed : walkSpeed, acceleration * Time.deltaTime);
         
         ControlDrag();
         TakeInput();
 
         if(Input.GetKeyDown(jumpkey) && isGrounded) Jump();
-        maxMoveVelocity = Math.Max(maxMoveVelocity, rb.velocity.magnitude);
     }
 
     void FixedUpdate()
     {
-        if(isMoving) rb.AddForce(moveDirection.normalized * moveSpeed * (isGrounded ? 1 : airMultiplier), ForceMode.Acceleration);
-        if(rb.velocity.magnitude >= 12) rb.velocity = Vector3.ClampMagnitude(rb.velocity, 12);
+        if(isMoving)
+            rb.AddForce(moveDirection.normalized * moveSpeed * (isGrounded ? 1 : airMultiplier), ForceMode.Acceleration);
+        ControlDrag();
     }
 
     void ControlDrag()
     {
         if(isGrounded) rb.drag = groundDrag;
         else rb.drag = airDrag;
+        if(new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude >= (isEnhanced ? enhancedMaxVel : maxVelocity))
+            rb.velocity = new Vector3((rb.velocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).x, rb.velocity.y, (rb.velocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).z);
     }
 
 
@@ -90,7 +92,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        if(isGrounded) isMoving = true;
+        isMoving = true;
         moveDirection = orientation.forward * verticalMovement + orientation.right * horizontalMovement;
     }
 }

@@ -8,16 +8,13 @@ public class DoorOpen : MonoBehaviour
     [SerializeField] float moveSpeed;
 
     Vector3 initialPosition;
-    Vector3 startPosition;
     Vector3 target;
 
-    float t;
-    bool open = false;
     bool moving = false;
 
     void Start()
     {
-        initialPosition = startPosition = Door.transform.position;
+        initialPosition = Door.transform.position;
     }
 
     void Update()
@@ -32,7 +29,6 @@ public class DoorOpen : MonoBehaviour
     void SetDestination(bool open)
     {
         Audio.Play();
-        startPosition = Door.transform.position;
         target = initialPosition + (open ? movement : Vector3.zero);
         moving = true;
     }

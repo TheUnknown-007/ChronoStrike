@@ -434,14 +434,10 @@ MonoBehaviour:
   room:
   - variants:
     - {fileID: 8901973711423094536, guid: e7d35f07473b8d8408c8020747e5b078, type: 3}
-    - {fileID: 8901973711423094536, guid: ab5cdaf5105520d4d825396d3d8b4c00, type: 3}
-    - {fileID: 8901973711423094536, guid: 2d6d294a782b3c0438002a803efb833f, type: 3}
-    - {fileID: 8901973711423094536, guid: 3e035454f015d034ea4739e06e016bb5, type: 3}
-    - {fileID: 8901973711423094536, guid: 6bf301c59e6e4444da05874c62a1a8fd, type: 3}
-    - {fileID: 8901973711423094536, guid: 06109a98fc7d230428fc8994c99999fe, type: 3}
   bossPrefab: {fileID: 5736726172264984688, guid: 159012d9c85a38449b9619300f0e58b1, type: 3}
   sentryPrefab: {fileID: 7169407725932817627, guid: ecf066cab3835454e846a19726c1b411, type: 3}
   enemyPrefab: {fileID: 1719168131344530708, guid: e63ce1a105d79c54cb8d2496d3341187, type: 3}
+  dronePrefab: {fileID: 7169407725932817627, guid: 0d771056824a32d4ea65f795e52313ea, type: 3}
   sizeRange: {x: 5, y: 7}
   offset: {x: 42, y: 42}
   startPos: 0
@@ -1751,7 +1747,7 @@ RectTransform:
   m_Father: {fileID: 240497580}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -2.5, y: 0}
   m_SizeDelta: {x: 5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2318,7 +2314,7 @@ RectTransform:
   m_Father: {fileID: 2086446318}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -2.5, y: 0}
   m_SizeDelta: {x: 5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3933,7 +3929,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1005942410
 Transform:
   m_ObjectHideFlags: 0
@@ -4377,7 +4373,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1156494022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5495,7 +5491,7 @@ RectTransform:
   m_Father: {fileID: 1676739620}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 2.5, y: 0}
   m_SizeDelta: {x: 5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5722,7 +5718,7 @@ RectTransform:
   m_Father: {fileID: 1704424738}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -2.5, y: 0}
   m_SizeDelta: {x: 5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7401,7 +7397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1945784828
 Transform:
   m_ObjectHideFlags: 0
@@ -8213,7 +8209,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2669295754010027216
 Transform:
   m_ObjectHideFlags: 0
@@ -8750,7 +8746,7 @@ Transform:
   m_GameObject: {fileID: 5447156913968520604}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8792,7 +8788,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.65
-  m_Height: 2.5
+  m_Height: 3
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &5447156914052071485
@@ -8965,18 +8961,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 5447156913069868141}
   playerHeight: 1
-  jumpForce: 700
-  walkSpeed: 60
+  jumpForce: 900
+  enhancedMaxVel: 20
+  maxVelocity: 14
+  walkSpeed: 65
+  enhancedSpeed: 80
   acceleration: 10
-  airMultiplier: 0.25
+  airMultiplier: 0.4
   groundCheck: {fileID: 5447156914237635615}
   groundMask:
     serializedVersion: 2
     m_Bits: 320
-  groundDrag: 4
-  airDrag: 0.25
-  walkFootstepDelay: 0.35
+  groundDrag: 3
+  airDrag: 0
   jumpkey: 32
+  isEnhanced: 0
 --- !u!114 &5447156914327613532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8993,7 +8992,7 @@ MonoBehaviour:
   gameOverScreen: {fileID: 673344711}
   gameplayState: {fileID: 11400000, guid: c47b214d8e6b1104c919c4d9a948a934, type: 2}
   fade: {fileID: 652132523}
-  startHealth: 100
+  startHealth: 1000000
   soundSource: {fileID: 319660572}
   Music:
   - {fileID: 214081377}
