@@ -20,9 +20,15 @@ MonoBehaviour:
   burstRate: 0
   bulletsPerBurst: 1
   spreadFactor: 3
-  bulletSpeed: 15
+  bulletSpeed: 10
   bulletDamage: 30
-  reloadTime: 2.5
+  lineLength: 0
+  reloadTime: 4
+  recoilMagnitude: 0
+  recoilReturnSpeed: 0
+  recoilSnappines: 0
+  swaySmooth: 0
+  swayMultiplier: 0
   collateralDamage: 20
   collateralRadius: 3
   shake: 1
