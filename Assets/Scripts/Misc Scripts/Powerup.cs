@@ -16,6 +16,9 @@ public class Powerup : MonoBehaviour
                 case 1:
                     PlayerManager.instance.AddHealth();
                     break;
+                case 2:
+                    PlayerManager.instance.Enhance();
+                    break;
             }
             Destroy(gameObject);
         }

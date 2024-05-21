@@ -1,3 +1,4 @@
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
@@ -30,6 +31,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] TMP_Text bullets;
     [SerializeField] Slider bulletsSlide;
     [SerializeField] Image hitEffect;
+    [SerializeField] Image enhancedEffect;
     [SerializeField] float effectDisappearSpeed;
     [Space, SerializeField] GameObject[] weaponObjects;
     [SerializeField] int secondsPerWeapon;
@@ -39,8 +41,18 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] float flinchMagnitude;
     [SerializeField] float flinchReturnSpeed;
     [SerializeField] float flinchSnappiness;
-    int currentKills = 0;
+    [Space, SerializeField] PlayerMovement movementScript;
+    [SerializeField] PostProcessVolume vfx;
+    [SerializeField] int enhancementTime = 60;
+    [SerializeField] int defaultFishEye = -20;
+    [SerializeField] int enhanceFishEye = -80;
+    [SerializeField] float defaultAbberation = 0.7f;
+    [SerializeField] float enhanceAbberation = 1;
 
+    LensDistortion fishEyeEffect;
+    ChromaticAberration abberation;
+
+    int currentKills = 0;
     [HideInInspector] public bool isDead {get; private set;}
 
     //bool bossTriggered;
@@ -65,6 +77,10 @@ public class PlayerManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+
+        vfx.profile.TryGetSettings(out fishEyeEffect);
+        vfx.profile.TryGetSettings(out abberation);
+
         currentHealth = startHealth;
         healthSlide.value = 1;
         score.text = "Score: 0";
@@ -108,8 +124,20 @@ public class PlayerManager : MonoBehaviour
         currentRotation2 = Vector3.Slerp(currentRotation2, targetRotation2, currentSnappiness * Time.fixedDeltaTime);
         weaponRecoilObject.localRotation = Quaternion.Euler(currentRotation2);
 
-        // Hit Effect
+        // Visual Effects
         hitEffect.color = new Color(hitEffect.color.r, hitEffect.color.g, hitEffect.color.b, Mathf.Lerp(hitEffect.color.a, 0, Time.deltaTime*effectDisappearSpeed));
+        if(movementScript.isEnhanced)
+        {
+            enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, Mathf.Lerp(enhancedEffect.color.a, 0.0625f, Time.deltaTime*0.5f*effectDisappearSpeed));
+            fishEyeEffect.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, enhanceFishEye, Time.deltaTime*0.5f*effectDisappearSpeed);
+            abberation.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, enhanceAbberation, Time.deltaTime*0.5f*effectDisappearSpeed);
+        }
+        else
+        {
+            enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, Mathf.Lerp(enhancedEffect.color.a, 0, Time.deltaTime*0.25f*effectDisappearSpeed));
+            fishEyeEffect.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, defaultFishEye, Time.deltaTime*0.5f*effectDisappearSpeed);
+            abberation.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, defaultAbberation, Time.deltaTime*0.5f*effectDisappearSpeed);
+        }
     }
 
     public void TriggerBoss()
@@ -246,6 +274,27 @@ public class PlayerManager : MonoBehaviour
         gameplayState.currentScore = -1;
         gameplayState.waveCount = 0;
         SceneManager.LoadScene(1);
+    }
+
+    public void Enhance()
+    {
+        StopCoroutine(enhancementTimer());
+        StartCoroutine(enhancementTimer());
+    }
+
+    IEnumerator enhancementTimer()
+    {
+        enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, 0);
+        fishEyeEffect.intensity.value = defaultFishEye;
+        abberation.intensity.value = defaultAbberation;
+        movementScript.isEnhanced = true;
+
+        yield return new WaitForSeconds(enhancementTime);
+
+        enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, 0.0625f);
+        fishEyeEffect.intensity.value = enhanceFishEye;
+        abberation.intensity.value = enhanceAbberation;
+        movementScript.isEnhanced = false;
     }
 
     void OnDestroy()
