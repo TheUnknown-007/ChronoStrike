@@ -25,8 +25,10 @@ public class Enemy : MonoBehaviour
     float totalHealth;
     ScriptableWeapon[] currentWeapons;
     bool alive = true;
+    RoomBehaviour room;
+    int currentPointIndex = 0;
 
-    public void Init(ScriptableWeapon[] weapon, float health, float fireDelay, Slider healthSlider)
+    public void Init(ScriptableWeapon[] weapon, float health, float fireDelay, Slider healthSlider, RoomBehaviour roomSpawner, int pointIndex)
     {
         if(health <= 10) reward = 10;
         else if(health >= 11) reward = 20;
@@ -45,7 +47,13 @@ public class Enemy : MonoBehaviour
                 if(x == 0) bossWeapons[0].Init(weapon[0], 50, fireDelay*2);
                 else bossWeapons[x].Init(weapon[1], 30, fireDelay);
             }
-            bossPosition = this.transform.position;
+            bossPosition = transform.position;
+        }
+        else if(type == 2)
+        {
+            room = roomSpawner;
+            room.dronePointUsed[currentPointIndex] = false;
+            currentPointIndex = pointIndex;
         }
     }
 
@@ -75,14 +83,38 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                StopAllCoroutines();
+                if(type != 2) StopAllCoroutines();
                 firing = false;
             }
         }
         else
         {
-            StopAllCoroutines();
+            if(type != 2) StopAllCoroutines();
             firing = false;
+        }
+    }
+
+    public void EnableBehavior()
+    {
+        StartCoroutine(DroneBehaviour());
+    }
+
+    IEnumerator DroneBehaviour()
+    {
+        yield return new WaitForSeconds(1);
+        while(true)
+        {
+            int x = 0;
+            room.CheckDroneScores();
+            while(room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] && x < room.droneMovePoints.Count) x+=1;
+            transform.position = room.droneMovePoints[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]].position;
+            
+            room.dronePointUsed[currentPointIndex] = false;
+            room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] = true;
+            currentPointIndex = room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]];
+
+            Debug.Log(room.sortedDroneMoveScores.Keys[0], room.droneMovePoints[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[0]]].gameObject);
+            yield return new WaitForSeconds(1);
         }
     }
 
@@ -113,7 +145,10 @@ public class Enemy : MonoBehaviour
                 while(x<currentWeapons[0].magSize/2)
                 {
                     gunSource.PlayOneShot(currentWeapons[0].gunSound);
-                    Destroy(Instantiate(currentWeapons[0].muzzleFlash, bulletPoint.position, bulletPoint.rotation), 0.05f);
+                    GameObject flash = Instantiate(currentWeapons[0].muzzleFlash, bulletPoint.position, bulletPoint.rotation);
+                    flash.layer = 0;
+                    foreach(Transform t in flash.transform) t.gameObject.layer = 0;flash.layer = 0;
+                    Destroy(flash, 0.05f);
                     Instantiate(currentWeapons[0].bullet, bulletPoint.position, bulletPoint.transform.rotation).GetComponent<Bullet>().Instantiate(1, currentWeapons[0].shake, currentWeapons[0].bulletSpeed, currentWeapons[0].bulletDamage, currentWeapons[0].collateralDamage, currentWeapons[0].collateralRadius, currentWeapons[0].lineLength, currentWeapons[0].bulletColor, currentWeapons[0].impactParticles);
                     yield return new WaitForSeconds(currentWeapons[0].fireRate);
                     x+=1;
@@ -122,7 +157,10 @@ public class Enemy : MonoBehaviour
             else
             {
                 gunSource.PlayOneShot(currentWeapons[0].gunSound);
-                Destroy(Instantiate(currentWeapons[0].muzzleFlash, bulletPoint.position, bulletPoint.rotation), 0.05f);
+                GameObject flash = Instantiate(currentWeapons[0].muzzleFlash, bulletPoint.position, bulletPoint.rotation);
+                flash.layer = 0;
+                foreach(Transform t in flash.transform) t.gameObject.layer = 0;flash.layer = 0;
+                Destroy(flash, 0.05f);
                 Instantiate(currentWeapons[0].bullet, bulletPoint.position, bulletPoint.transform.rotation).GetComponent<Bullet>().Instantiate(1, currentWeapons[0].shake, currentWeapons[0].bulletSpeed, currentWeapons[0].bulletDamage, currentWeapons[0].collateralDamage, currentWeapons[0].collateralRadius, currentWeapons[0].lineLength, currentWeapons[0].bulletColor, currentWeapons[0].impactParticles);
             }
             yield return new WaitForSeconds(FireDelay);

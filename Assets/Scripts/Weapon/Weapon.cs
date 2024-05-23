@@ -97,6 +97,7 @@ public class Weapon : MonoBehaviour
             Quaternion shootDir = Quaternion.Euler(bulletPoint.rotation.eulerAngles.x + xRot, bulletPoint.rotation.eulerAngles.y + yRot, bulletPoint.rotation.eulerAngles.z);
             GameObject flash = Instantiate(weaponData.muzzleFlash, bulletPoint.position, bulletPoint.rotation);
             flash.transform.rotation = flash.transform.rotation * Quaternion.Euler(0, 0, Random.Range(0, -90));
+            flash.transform.SetParent(transform.parent);
             Destroy(flash, 0.05f);
             Instantiate(weaponData.bullet, bulletPoint.position, shootDir).GetComponent<Bullet>().Instantiate(0, weaponData.shake, weaponData.bulletSpeed, weaponData.bulletDamage, weaponData.collateralDamage, weaponData.collateralRadius, weaponData.lineLength, weaponData.bulletColor, weaponData.impactParticles);
         }
