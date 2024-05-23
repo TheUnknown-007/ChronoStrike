@@ -15,7 +15,8 @@ public class DFSAlgorithm : MonoBehaviour
     [SerializeField] RoomType[] room;
     [SerializeField] GameObject bossPrefab;
     [SerializeField] GameObject sentryPrefab;
-    [SerializeField] GameObject enemyPrefab; 
+    [SerializeField] GameObject enemyPrefab;
+    [SerializeField] GameObject dronePrefab;
     [SerializeField] Vector2 sizeRange;
     [SerializeField] Vector2 offset;
     [SerializeField] int startPos = 0;
@@ -45,9 +46,15 @@ public class DFSAlgorithm : MonoBehaviour
                     (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[3] && ((cellToCheck+1) % size != 0) && (cellToCheck + 1 == currentCell)) ||
                     (instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().currentStatus[2] && (cellToCheck % size != 0) && (cellToCheck - 1 == currentCell))
                 )
+                {
                     instantiatedRooms[cellToCheck].SetActive(true);
+                    instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().RefreshRoom(true);
+                }
                 else
+                {
                     instantiatedRooms[cellToCheck].SetActive(false);
+                    instantiatedRooms[cellToCheck].GetComponent<RoomBehaviour>().RefreshRoom(false);
+                }
             }
     }
 
@@ -62,8 +69,8 @@ public class DFSAlgorithm : MonoBehaviour
                     int cellID = Mathf.FloorToInt(i + j * size);
                     GameObject newRoom = Instantiate(room[roomType].variants[UnityEngine.Random.Range(0, room[roomType].variants.Length)], new Vector3(i*offset.x, 0, -j*offset.y), Quaternion.identity, transform);
                     RoomBehaviour script = newRoom.GetComponent<RoomBehaviour>();
-                    if(cellID == board.Count-1) script.UpdateRoom(cellID, board[cellID].status, true, null, null, bossPrefab, healthSlider);
-                    else script.UpdateRoom(cellID, board[cellID].status, false, sentryPrefab, enemyPrefab, null, healthSlider);
+                    if(cellID == board.Count-1) script.UpdateRoom(cellID, board[cellID].status, true, null, null, null, bossPrefab, healthSlider);
+                    else script.UpdateRoom(cellID, board[cellID].status, false, sentryPrefab, enemyPrefab, dronePrefab, null, healthSlider);
                     newRoom.name += " " + i + ":" + j;
                     if(cellID != 0) newRoom.SetActive(false);
                     instantiatedRooms[cellID] = newRoom;

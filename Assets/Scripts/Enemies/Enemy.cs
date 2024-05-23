@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
 {
     public static Vector3 bossPosition { get; private set; }
     [SerializeField] int type = 0;
+    [SerializeField] float moveSpeed;
     [SerializeField] GameObject explosion;
     [SerializeField] LayerMask visiblityMask;
 
@@ -27,6 +28,16 @@ public class Enemy : MonoBehaviour
     bool alive = true;
     RoomBehaviour room;
     int currentPointIndex = 0;
+    Vector3 targetPosition;
+
+    Vector3 MultiplyVector(Vector3 a, Vector3 b)
+    {
+        Vector3 result = a;
+        result.x *= b.x;
+        result.y *= b.y;
+        result.z *= b.z;
+        return result;
+    }
 
     public void Init(ScriptableWeapon[] weapon, float health, float fireDelay, Slider healthSlider, RoomBehaviour roomSpawner, int pointIndex)
     {
@@ -67,6 +78,16 @@ public class Enemy : MonoBehaviour
             var rotation = Quaternion.LookRotation(lookPos);
             model.transform.rotation = rotation;
         }
+
+        if(type == 2)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPosition.x, transform.position.y, targetPosition.z), Time.deltaTime*moveSpeed);
+            transform.position = new Vector3(
+                    transform.position.x, 
+                    Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, targetPosition.y, transform.position.z), Time.deltaTime*0.25f*moveSpeed).y,
+                    transform.position.z
+            );
+        }
     }
 
     void FixedUpdate()
@@ -83,13 +104,13 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                if(type != 2) StopAllCoroutines();
+                StopCoroutine(FireAtPlayer());
                 firing = false;
             }
         }
         else
         {
-            if(type != 2) StopAllCoroutines();
+            StopCoroutine(FireAtPlayer());
             firing = false;
         }
     }
@@ -97,6 +118,18 @@ public class Enemy : MonoBehaviour
     public void EnableBehavior()
     {
         StartCoroutine(DroneBehaviour());
+        StartCoroutine(DroneHeightBob());
+    }
+
+    IEnumerator DroneHeightBob()
+    {
+        yield return new WaitForSeconds(0.25f);
+        while(true)
+        {
+            targetPosition += Vector3.up * Random.Range(-1f,1f);
+            targetPosition = new Vector3(targetPosition.x, Mathf.Clamp(targetPosition.y, 2, 5), targetPosition.z);
+            yield return new WaitForSeconds(0.25f);
+        }
     }
 
     IEnumerator DroneBehaviour()
@@ -106,14 +139,14 @@ public class Enemy : MonoBehaviour
         {
             int x = 0;
             room.CheckDroneScores();
-            while(room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] && x < room.droneMovePoints.Count) x+=1;
-            transform.position = room.droneMovePoints[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]].position;
+            while(room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] && x < room.droneMovePts.Count) x+=1;
+            targetPosition = Vector3.up*Random.Range(2,6) + room.droneMovePts[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]].position;
             
             room.dronePointUsed[currentPointIndex] = false;
             room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] = true;
             currentPointIndex = room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]];
 
-            Debug.Log(room.sortedDroneMoveScores.Keys[0], room.droneMovePoints[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[0]]].gameObject);
+            Debug.Log(room.sortedDroneMoveScores.Keys[0], room.droneMovePts[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[0]]].gameObject);
             yield return new WaitForSeconds(1);
         }
     }

@@ -98,7 +98,7 @@ public class Weapon : MonoBehaviour
             GameObject flash = Instantiate(weaponData.muzzleFlash, bulletPoint.position, bulletPoint.rotation);
             flash.transform.rotation = flash.transform.rotation * Quaternion.Euler(0, 0, Random.Range(0, -90));
             flash.transform.SetParent(transform.parent);
-            Destroy(flash, 0.05f);
+            Destroy(flash, 0.075f);
             Instantiate(weaponData.bullet, bulletPoint.position, shootDir).GetComponent<Bullet>().Instantiate(0, weaponData.shake, weaponData.bulletSpeed, weaponData.bulletDamage, weaponData.collateralDamage, weaponData.collateralRadius, weaponData.lineLength, weaponData.bulletColor, weaponData.impactParticles);
         }
     }

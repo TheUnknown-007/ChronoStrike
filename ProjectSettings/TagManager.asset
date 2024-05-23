@@ -9,6 +9,7 @@ TagManager:
   - DungeonCell
   - Enemy
   - BossEnemy
+  - DroneMovePoint
   layers:
   - Default
   - TransparentFX
