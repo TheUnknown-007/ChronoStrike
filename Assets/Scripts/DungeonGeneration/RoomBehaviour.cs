@@ -156,6 +156,7 @@ public class RoomBehaviour : MonoBehaviour
         CheckDroneScores();
         foreach(Enemy drone in dronesSpawned)
         {
+            if(!drone) continue;
             if(active) drone.EnableBehavior();
             else drone.StopAllCoroutines();
         }
