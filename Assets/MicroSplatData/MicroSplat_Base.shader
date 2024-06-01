@@ -11,14 +11,12 @@
 ////////////////////////////////////////
 
 
-Shader "Hidden/Terrain_Base-2034391297"
+Shader "Hidden/Terrain_Base317988589"
 {
    Properties
    {
             [HideInInspector] _Control0 ("Control0", 2D) = "red" {}
       [HideInInspector] _Control1 ("Control1", 2D) = "black" {}
-      [HideInInspector] _Control2 ("Control2", 2D) = "black" {}
-      [HideInInspector] _Control3 ("Control3", 2D) = "black" {}
       
 
       // Splats
@@ -41,7 +39,7 @@ Shader "Hidden/Terrain_Base-2034391297"
    }
    SubShader
    {
-            Tags {"RenderType" = "Opaque" "Queue" = "Geometry+100" "IgnoreProjector" = "False"  "TerrainCompatible" = "true" "SplatCount" = "16"}
+            Tags {"RenderType" = "Opaque" "Queue" = "Geometry+100" "IgnoreProjector" = "False"  "TerrainCompatible" = "true" "SplatCount" = "8"}
 
       
       Pass
@@ -73,6 +71,7 @@ Shader "Hidden/Terrain_Base-2034391297"
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _MAX8TEXTURES 1
       #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
@@ -4650,6 +4649,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _MAX8TEXTURES 1
       #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
@@ -9155,6 +9155,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _MAX8TEXTURES 1
       #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
@@ -13748,6 +13749,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _MAX8TEXTURES 1
       #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
@@ -18146,6 +18148,7 @@ float3 GetTessFactors ()
       #define _MICROTERRAIN 1
       #define _HYBRIDHEIGHTBLEND 1
       #define _USEGRADMIP 1
+      #define _MAX8TEXTURES 1
       #define _PERTEXBRIGHTNESS 1
       #define _PERTEXSMOOTHSTR 1
       #define _BRANCHSAMPLES 1
