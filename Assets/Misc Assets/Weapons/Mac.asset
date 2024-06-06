@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeKills: 5
   automatic: 1
   magSize: 40
-  fireRate: 0.04
+  fireRate: 0.035
   burstRate: 0
   bulletsPerBurst: 0
   spreadFactor: 7
@@ -23,8 +23,8 @@ MonoBehaviour:
   bulletDamage: 1.5
   lineLength: 0.75
   reloadTime: 1.5
-  recoilMagnitude: -5
-  recoilReturnSpeed: 5
+  recoilMagnitude: -10
+  recoilReturnSpeed: 10
   recoilSnappines: 2
   swaySmooth: 8
   swayMultiplier: 8

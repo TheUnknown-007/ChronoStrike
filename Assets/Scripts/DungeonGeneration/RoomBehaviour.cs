@@ -56,7 +56,6 @@ public class RoomBehaviour : MonoBehaviour
                 dronePointUsed.Add(false);
             }
         }
-        Debug.Log(droneMovePts.Count);
 
         for(int i = 0; i < Status.Length; i++)
         {

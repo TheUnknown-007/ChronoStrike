@@ -8,7 +8,15 @@ using TMPro;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance {get; private set;}
-    [SerializeField] float damageMultiplier = 1.5f;
+    [Header("Settings Menu References")]
+    [SerializeField] Camera mainCamera;
+    [SerializeField] Camera weaponCamera;
+    [SerializeField] LayerMask withWeaponMask;
+    [SerializeField] LayerMask withoutWeaponMask;
+    [SerializeField] ScreenSpaceReflectionPresetParameter ssReflectQualityMid;
+    [SerializeField] ScreenSpaceReflectionPresetParameter ssReflectQualityUltra;
+
+    [Space, SerializeField] float damageMultiplier = 1.5f;
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] PlayerState gameplayState;
     [SerializeField] Animator fade;
@@ -51,6 +59,7 @@ public class PlayerManager : MonoBehaviour
 
     LensDistortion fishEyeEffect;
     ChromaticAberration abberation;
+    ScreenSpaceReflections ssReflect;
 
     int currentKills = 0;
     [HideInInspector] public bool isDead {get; private set;}
@@ -80,6 +89,12 @@ public class PlayerManager : MonoBehaviour
 
         vfx.profile.TryGetSettings(out fishEyeEffect);
         vfx.profile.TryGetSettings(out abberation);
+        vfx.profile.TryGetSettings(out ssReflect);
+        //vfx.profile.TryGetSettings(out ssReflectQuality);
+
+        SetQuality(gameplayState.graphicQuality);
+        SetReflectionQuality(gameplayState.reflectionQuality);
+        SetGunCamera(gameplayState.weaponCamera);
 
         currentHealth = startHealth;
         healthSlide.value = 1;
@@ -268,16 +283,46 @@ public class PlayerManager : MonoBehaviour
         SceneManager.LoadScene(1);
     }
 
-    public void Restart()
+    public void Restart(int scene)
     {
         gameplayState.continuePlay = false;
         gameplayState.currentScore = -1;
         gameplayState.waveCount = 0;
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(scene);
+    }
+
+    public void SetQuality(int index)
+    {
+        QualitySettings.SetQualityLevel(index, false);
+    }
+
+    public void SetReflectionQuality(int index)
+    {
+        switch(index)
+        {
+            case 0:
+                ssReflect.active = false;
+                break;
+            case 1:
+                ssReflect.active = true;
+                ssReflect.preset.value = ScreenSpaceReflectionPreset.Medium;
+                break;
+            case 2:
+                ssReflect.active = true;
+                ssReflect.preset.value = ScreenSpaceReflectionPreset.Overkill;
+                break;
+        }
+    }
+
+    public void SetGunCamera(bool active)
+    {
+        weaponCamera.gameObject.SetActive(active);
+        mainCamera.cullingMask = active ? withoutWeaponMask : withWeaponMask;
     }
 
     public void Enhance()
     {
+        soundSource.PlayOneShot(powerup);
         StopCoroutine(enhancementTimer());
         StartCoroutine(enhancementTimer());
     }

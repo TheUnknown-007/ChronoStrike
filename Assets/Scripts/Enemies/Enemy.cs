@@ -146,7 +146,6 @@ public class Enemy : MonoBehaviour
             room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] = true;
             currentPointIndex = room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]];
 
-            Debug.Log(room.sortedDroneMoveScores.Keys[0], room.droneMovePts[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[0]]].gameObject);
             yield return new WaitForSeconds(1);
         }
     }
