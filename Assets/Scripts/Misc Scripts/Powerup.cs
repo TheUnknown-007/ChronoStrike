@@ -19,6 +19,12 @@ public class Powerup : MonoBehaviour
                 case 2:
                     PlayerManager.instance.Enhance();
                     break;
+                case 3:
+                    PlayerManager.instance.GiveWeapon(7, 15);
+                    break;
+                case 4:
+                    PlayerManager.instance.GiveWeapon(8, 10);
+                    break;
             }
             Destroy(gameObject);
         }

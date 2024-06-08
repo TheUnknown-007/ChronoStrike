@@ -12,16 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bc42b7c660fa1459e45acc4f857087, type: 3}
   m_Name: Laser
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
+  upgradeKills: 0
   automatic: 0
   magSize: 0
-  lineLength: 0
   fireRate: 0
+  burstRate: 0
+  bulletsPerBurst: 0
   spreadFactor: 0
   bulletSpeed: 0
   bulletDamage: 20
+  lineLength: 0
   reloadTime: 0
+  recoilMagnitude: 0
+  recoilReturnSpeed: 0
+  recoilSnappines: 0
+  weaponRecoil: 1.5
+  swaySmooth: 0
+  swayMultiplier: 0
   collateralDamage: 0
   collateralRadius: 0
+  shake: 0
   gunSound: {fileID: 8300000, guid: 0ed0ca410289df84e8085b41f1c4f186, type: 3}
   impactParticles: {fileID: 5364804623089671519, guid: dab7865c3dbbbde4ab99e1b9906e48da, type: 3}
   bullet: {fileID: 0}
@@ -53,5 +63,6 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
+    m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2

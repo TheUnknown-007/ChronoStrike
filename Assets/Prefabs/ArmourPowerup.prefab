@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2772422621382957799}
   - component: {fileID: 6437308874112064210}
   - component: {fileID: 1268397372239714764}
-  m_Layer: 2
+  m_Layer: 7
   m_Name: ArmourPowerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,9 +128,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7640558969779515294, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -7146521406498821007, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -1599826595754709761, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: -516098083770646512, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
       propertyPath: m_Name
       value: Armour v2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3894160068166718199, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8416272007918961125, guid: 287fe844f739a2a4180833c6f4599ac8, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

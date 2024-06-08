@@ -12,4 +12,5 @@ public class PlayerState : ScriptableObject
     public int waveCount = 0;
     public bool continuePlay = false;
     public int currentScore = -1;
+    public float timeStarted = 0;
 }

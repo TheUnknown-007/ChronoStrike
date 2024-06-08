@@ -324,6 +324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  moveSpeed: 0
   explosion: {fileID: 364776266275441260, guid: b7b19837f37bf7442bca1b970528d5f5, type: 3}
   visiblityMask:
     serializedVersion: 2
@@ -333,6 +334,7 @@ MonoBehaviour:
   bulletParent: {fileID: 2713795082143853941}
   bossWeapons: []
   model: {fileID: 0}
+  ScoreReward: 100
 --- !u!54 &7169407725932817626
 Rigidbody:
   m_ObjectHideFlags: 0

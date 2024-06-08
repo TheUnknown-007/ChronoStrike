@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4bc42b7c660fa1459e45acc4f857087, type: 3}
+  m_Name: EnemyMG
+  m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
+  upgradeKills: 0
+  automatic: 1
+  magSize: 100
+  fireRate: 0.055
+  burstRate: 0
+  bulletsPerBurst: 0
+  spreadFactor: 1.5
+  bulletSpeed: 75
+  bulletDamage: 2.5
+  lineLength: 5
+  reloadTime: 0
+  recoilMagnitude: 0
+  recoilReturnSpeed: 0
+  recoilSnappines: 0
+  weaponRecoil: 1.5
+  swaySmooth: 0
+  swayMultiplier: 0
+  collateralDamage: 0
+  collateralRadius: 0
+  shake: 0
+  gunSound: {fileID: 8300000, guid: dfd739ae0cb41b14184cd34e32111bcb, type: 3}
+  impactParticles: {fileID: 5364804623089671519, guid: 67ed8b38ddf77e546868c61149b43f7c, type: 3}
+  bullet: {fileID: 7297281510608327928, guid: 74085a5acc8f40845842eb73f2260e5e, type: 3}
+  muzzleFlash: {fileID: 7561293926167957526, guid: 7f9fbab3bb5874a4f8cfc5057300867f, type: 3}
+  bulletColor:
+    serializedVersion: 2
+    key0: {r: 1, g: 0.08282871, b: 0, a: 1}
+    key1: {r: 1, g: 0.40860218, b: 0, a: 0}
+    key2: {r: 0.4339623, g: 0.05167653, b: 0.038892835, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 18504
+    ctime2: 35659
+    ctime3: 55319
+    ctime4: 55319
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 50886
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 4
+    m_NumAlphaKeys: 2

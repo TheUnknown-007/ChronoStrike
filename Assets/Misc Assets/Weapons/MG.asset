@@ -19,13 +19,14 @@ MonoBehaviour:
   burstRate: 0
   bulletsPerBurst: 0
   spreadFactor: 1.5
-  bulletSpeed: 40
+  bulletSpeed: 45
   bulletDamage: 2.5
   lineLength: 5
   reloadTime: 4
-  recoilMagnitude: -4
+  recoilMagnitude: -6
   recoilReturnSpeed: 2
   recoilSnappines: 20
+  weaponRecoil: 1.25
   swaySmooth: 10
   swayMultiplier: 1
   collateralDamage: 0

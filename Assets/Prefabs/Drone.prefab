@@ -250,6 +250,7 @@ MonoBehaviour:
   bulletParent: {fileID: 2713795082143853941}
   bossWeapons: []
   model: {fileID: 0}
+  ScoreReward: 10
 --- !u!65 &1926352602889280240
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -331,6 +332,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: db17bf4ea6e36e94186dc9bde894a3ad, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: db17bf4ea6e36e94186dc9bde894a3ad, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -4683669308469848369, guid: db17bf4ea6e36e94186dc9bde894a3ad, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -342,6 +351,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: db17bf4ea6e36e94186dc9bde894a3ad, type: 3}
       propertyPath: m_Name
       value: Drone
+      objectReference: {fileID: 0}
+    - target: {fileID: 8442510506162454399, guid: db17bf4ea6e36e94186dc9bde894a3ad, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

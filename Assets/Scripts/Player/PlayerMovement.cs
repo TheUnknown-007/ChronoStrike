@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     float verticalMovement;
     float horizontalMovement;
 
+    int frameDelay = 0;
+
     Vector3 moveDirection;
     Rigidbody rb;
 
@@ -51,7 +53,13 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         if(PlayerManager.instance.isDead) return;
-        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, playerHeight/2+0.1f, groundMask);
+        
+        if(frameDelay == 0) 
+        {
+            isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, playerHeight/2+0.1f, groundMask);
+            if(isGrounded) rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        } else frameDelay--;
+
         moveSpeed = Mathf.Lerp(moveSpeed, isEnhanced ? enhancedSpeed : walkSpeed, acceleration * Time.deltaTime);
         
         ControlDrag();
@@ -78,7 +86,14 @@ public class PlayerMovement : MonoBehaviour
 
     void Jump()
     {
+        isGrounded = false;
+        frameDelay = 10;
+
+        //rb.Sleep();
+        //transform.position = new Vector3(transform.position.x, transform.position.y+1.5f, transform.position.z);
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        //rb.WakeUp();
+
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
 

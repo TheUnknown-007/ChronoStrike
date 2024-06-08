@@ -12,9 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49c0d1a648020b449fdb08c6d8a96de, type: 3}
   m_Name: PlayerState
   m_EditorClassIdentifier: 
-  graphicQuality: 1
-  reflectionQuality: 2
-  weaponCamera: 1
+  resolutionIndex: 17
+  fullscreen: 1
+  gunCamera: 0
+  graphicQuality: 0
+  reflectionQuality: 0
+  weaponCamera: 0
   waveCount: 0
   continuePlay: 0
   currentScore: -1
+  timeStarted: 0

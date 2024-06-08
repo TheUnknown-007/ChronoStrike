@@ -30,15 +30,6 @@ public class Enemy : MonoBehaviour
     int currentPointIndex = 0;
     Vector3 targetPosition;
 
-    Vector3 MultiplyVector(Vector3 a, Vector3 b)
-    {
-        Vector3 result = a;
-        result.x *= b.x;
-        result.y *= b.y;
-        result.z *= b.z;
-        return result;
-    }
-
     public void Init(ScriptableWeapon[] weapon, float health, float fireDelay, Slider healthSlider, RoomBehaviour roomSpawner, int pointIndex)
     {
         if(health <= 10) reward = 10;
@@ -104,13 +95,15 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                StopCoroutine(FireAtPlayer());
+                StopAllCoroutines();
+                if(type == 2) EnableBehavior();
                 firing = false;
             }
         }
         else
         {
-            StopCoroutine(FireAtPlayer());
+            StopAllCoroutines();
+            if(type == 2) EnableBehavior();
             firing = false;
         }
     }
@@ -174,12 +167,12 @@ public class Enemy : MonoBehaviour
             if(currentWeapons[0].automatic)
             {
                 int x = 0;
-                while(x<currentWeapons[0].magSize/2)
+                while(x<currentWeapons[0].magSize && firing)
                 {
                     gunSource.PlayOneShot(currentWeapons[0].gunSound);
                     GameObject flash = Instantiate(currentWeapons[0].muzzleFlash, bulletPoint.position, bulletPoint.rotation);
                     flash.layer = 0;
-                    foreach(Transform t in flash.transform) t.gameObject.layer = 0;flash.layer = 0;
+                    foreach(Transform t in flash.transform) t.gameObject.layer = 0;
                     Destroy(flash, 0.05f);
                     Instantiate(currentWeapons[0].bullet, bulletPoint.position, bulletPoint.transform.rotation).GetComponent<Bullet>().Instantiate(1, currentWeapons[0].shake, currentWeapons[0].bulletSpeed, currentWeapons[0].bulletDamage, currentWeapons[0].collateralDamage, currentWeapons[0].collateralRadius, currentWeapons[0].lineLength, currentWeapons[0].bulletColor, currentWeapons[0].impactParticles);
                     yield return new WaitForSeconds(currentWeapons[0].fireRate);
@@ -188,12 +181,17 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                gunSource.PlayOneShot(currentWeapons[0].gunSound);
-                GameObject flash = Instantiate(currentWeapons[0].muzzleFlash, bulletPoint.position, bulletPoint.rotation);
-                flash.layer = 0;
-                foreach(Transform t in flash.transform) t.gameObject.layer = 0;flash.layer = 0;
-                Destroy(flash, 0.05f);
-                Instantiate(currentWeapons[0].bullet, bulletPoint.position, bulletPoint.transform.rotation).GetComponent<Bullet>().Instantiate(1, currentWeapons[0].shake, currentWeapons[0].bulletSpeed, currentWeapons[0].bulletDamage, currentWeapons[0].collateralDamage, currentWeapons[0].collateralRadius, currentWeapons[0].lineLength, currentWeapons[0].bulletColor, currentWeapons[0].impactParticles);
+                for(int i = 0; i < currentWeapons[0].bulletsPerBurst && firing; i++)
+                {
+                    gunSource.PlayOneShot(currentWeapons[0].gunSound);
+                    GameObject flash = Instantiate(currentWeapons[0].muzzleFlash, bulletPoint.position, bulletPoint.rotation);
+                    flash.layer = 0;
+                    foreach(Transform t in flash.transform) t.gameObject.layer = 0;
+                    Destroy(flash, 0.05f);
+                    Instantiate(currentWeapons[0].bullet, bulletPoint.position, bulletPoint.transform.rotation).GetComponent<Bullet>().Instantiate(1, currentWeapons[0].shake, currentWeapons[0].bulletSpeed, currentWeapons[0].bulletDamage, currentWeapons[0].collateralDamage, currentWeapons[0].collateralRadius, currentWeapons[0].lineLength, currentWeapons[0].bulletColor, currentWeapons[0].impactParticles);
+                    yield return new WaitForSeconds(currentWeapons[0].burstRate);
+                }
+                yield return new WaitForSeconds(currentWeapons[0].fireRate);
             }
             yield return new WaitForSeconds(FireDelay);
         }

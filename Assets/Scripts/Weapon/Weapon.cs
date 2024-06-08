@@ -87,7 +87,7 @@ public class Weapon : MonoBehaviour
 
     void ShootWeapon()
     {
-        PlayerManager.instance.AddRecoil(weaponData.recoilMagnitude, weaponData.recoilReturnSpeed, weaponData.recoilSnappines);
+        PlayerManager.instance.AddRecoil(weaponData.recoilMagnitude, weaponData.weaponRecoil, weaponData.recoilReturnSpeed, weaponData.recoilSnappines);
         PlayerManager.instance.AmmoChange(weaponData.magSize, magCount);
         audioSource.PlayOneShot(weaponData.gunSound);
         float xRot = Random.Range(-weaponData.spreadFactor, weaponData.spreadFactor);
