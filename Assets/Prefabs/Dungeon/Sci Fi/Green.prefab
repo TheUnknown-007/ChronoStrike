@@ -9466,6 +9466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9089da1592b8a7146b491747da234cca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DoubleFloored: 0
   walls:
   - {fileID: 3240324501275966411}
   - {fileID: 3240324501287009613}
@@ -9477,7 +9478,7 @@ MonoBehaviour:
   - {fileID: 3240324502066812492}
   - {fileID: 8903099502282044157}
   bossSpawnPoint: {fileID: 3246339349393756166}
-  spawnPoints:
+  enemySpawns:
   - {fileID: 1015499553852065001}
   - {fileID: 4286832333134552039}
   - {fileID: 594999708156256268}
@@ -9494,7 +9495,7 @@ MonoBehaviour:
   - {fileID: 740805807834155232}
   - {fileID: 2208423659569954631}
   - {fileID: 2626796018140971156}
-  sentrySpawnPoints:
+  sentrySpawns:
   - {fileID: 4450087792641142614}
   - {fileID: 8382587873205632043}
   - {fileID: 6152556590299558223}
@@ -9504,28 +9505,32 @@ MonoBehaviour:
   - {fileID: 805291052327233208}
   - {fileID: 7954302467969344662}
   - {fileID: 160077515030577791}
-  lootSpawnPoints:
+  floor2EnemySpawns: []
+  floor2SentrySpawns: []
+  PowerupSpawns:
   - {fileID: 4663233774054520599}
   - {fileID: 4117225962433515763}
   - {fileID: 2785324528609850712}
   - {fileID: 7717270649383623463}
-  possibleLootSpawns:
+  - {fileID: 2819798238338968195}
+  Powerups:
   - {fileID: 3181385293727205200, guid: 7ffb7a6cd7a03654488552453eed8920, type: 3}
   - {fileID: 2772422621382957798, guid: 43e31682f297f6d4bbebd6aba7673b0d, type: 3}
   - {fileID: 3181385293727205200, guid: b95776fd1cdfdb840a8d10c90527a7af, type: 3}
   - {fileID: 3181385293727205200, guid: 47096d7368bd2b54bb78416117819320, type: 3}
   - {fileID: 3181385293727205200, guid: 84e98c0cd12724842a325b126219a3a5, type: 3}
-  possibleEnemyWeapons:
+  EnemyWeapons:
   - {fileID: 11400000, guid: a2edf9bd78a2d2d4c8a16265ac4d5b45, type: 2}
-  - {fileID: 11400000, guid: 75dfd78333be9a64e8ed359046c83498, type: 2}
-  - {fileID: 11400000, guid: 5876f8efb4e416c4fb4b15d479141841, type: 2}
+  - {fileID: 11400000, guid: 9a5c2526d165b804181cce357daa741d, type: 2}
   - {fileID: 11400000, guid: edb12613658fbc64ab0cb2ecb7188cbe, type: 2}
   - {fileID: 11400000, guid: 7dd7c565ec9a25448a9e9ed34b812409, type: 2}
-  bossWeapons:
+  - {fileID: 11400000, guid: 5876f8efb4e416c4fb4b15d479141841, type: 2}
+  - {fileID: 11400000, guid: 75dfd78333be9a64e8ed359046c83498, type: 2}
+  BossWeapons:
   - {fileID: 11400000, guid: 3d74188ff755f0944ac1f42033732f0f, type: 2}
   - {fileID: 11400000, guid: e42389c345c648847ae33603dabde5df, type: 2}
-  sentryWeapon: {fileID: 11400000, guid: e42389c345c648847ae33603dabde5df, type: 2}
-  droneVisibility:
+  SentryWeapon: {fileID: 11400000, guid: e42389c345c648847ae33603dabde5df, type: 2}
+  DroneVisibility:
     serializedVersion: 2
     m_Bits: 0
   healthRange: {x: 10, y: 40}
@@ -21513,6 +21518,11 @@ Transform:
 --- !u!4 &2785324528609850712 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8418868792197779814, guid: f1347adae41897f449d9fe92e5daf5a2, type: 3}
+  m_PrefabInstance: {fileID: 5940988332919678014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &2819798238338968195 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8454187682503691965, guid: f1347adae41897f449d9fe92e5daf5a2, type: 3}
   m_PrefabInstance: {fileID: 5940988332919678014}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &3246339349393756166 stripped

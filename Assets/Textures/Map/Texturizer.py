@@ -35,6 +35,16 @@ def NegateImage(old, new):
             o.putpixel((x, y), tuple([max(1-z, 1) for z in s.getpixel((x,y))]))
     o.save(new)
 
+def Invert(old, new):
+    s = Image.open(old).convert("RGBA")
+    w, h = s.size
+    o = Image.new("RGBA", (w, h))
+    for y in range(h):
+        for x in range(w):
+            newPix = [0, 255, 0, int(s.getpixel((x,y))[3]-(0.2*255))]
+            o.putpixel((x, y), tuple(newPix))
+    o.save(new)
+
 def FadeOut(old, new):
     s = Image.open(old).convert("RGBA")
     w, h = s.size
@@ -53,4 +63,4 @@ def FadeOut(old, new):
 
 # NegateImage(f"{sys.argv[1]}\\Roughness.png", f"{sys.argv[1]}\\Smoothness.png")
 
-FadeOut(sys.argv[1], sys.argv[2])
+Invert(sys.argv[1], sys.argv[2])

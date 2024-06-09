@@ -5,17 +5,20 @@ using UnityEngine.UI;
 
 public class RoomBehaviour : MonoBehaviour
 {
+    [SerializeField] bool DoubleFloored;
     [SerializeField] GameObject[] walls; // 0 top, 1 bottom, 2 left, 3 right
     [SerializeField] GameObject[] doors; // 0 top, 1 bottom, 2 left, 3 right
     [SerializeField] Transform bossSpawnPoint;
-    [SerializeField] Transform[] spawnPoints;
-    [SerializeField] Transform[] sentrySpawnPoints;
-    [SerializeField] Transform[] lootSpawnPoints;
-    [SerializeField] GameObject[] possibleLootSpawns;
-    [SerializeField] ScriptableWeapon[] possibleEnemyWeapons;
-    [SerializeField] ScriptableWeapon[] bossWeapons;
-    [SerializeField] ScriptableWeapon sentryWeapon;
-    [SerializeField] LayerMask droneVisibility;
+    [Space, SerializeField] Transform[] enemySpawns;
+    [SerializeField] Transform[] sentrySpawns;
+    [Space, SerializeField] Transform[] floor2EnemySpawns;
+    [SerializeField] Transform[] floor2SentrySpawns;
+    [Space, SerializeField] Transform[] PowerupSpawns;
+    [SerializeField] GameObject[] Powerups;
+    [SerializeField] ScriptableWeapon[] EnemyWeapons;
+    [SerializeField] ScriptableWeapon[] BossWeapons;
+    [SerializeField] ScriptableWeapon SentryWeapon;
+    [SerializeField] LayerMask DroneVisibility;
     [SerializeField] Vector2 healthRange;
     [SerializeField] Vector2 fireDelayRange;
     [HideInInspector] public bool[] currentStatus {get; private set;}
@@ -78,9 +81,9 @@ public class RoomBehaviour : MonoBehaviour
         {
             int weaponSet = Random.Range(0, 2);
             if(weaponSet == 1)
-                Instantiate(bossPrefab, bossSpawnPoint.position, bossSpawnPoint.rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {bossWeapons[1], bossWeapons[1]}, 500, 3, healthSlider, this, 0);
+                Instantiate(bossPrefab, bossSpawnPoint.position, bossSpawnPoint.rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {BossWeapons[1], BossWeapons[1]}, 500, 3, healthSlider, this, 0);
             else
-                Instantiate(bossPrefab, bossSpawnPoint.position, bossSpawnPoint.rotation, transform).GetComponent<Enemy>().Init(bossWeapons, 500, 1.5f, healthSlider, this, 0);
+                Instantiate(bossPrefab, bossSpawnPoint.position, bossSpawnPoint.rotation, transform).GetComponent<Enemy>().Init(BossWeapons, 500, 1.5f, healthSlider, this, 0);
             return;
         }
 
@@ -90,41 +93,73 @@ public class RoomBehaviour : MonoBehaviour
         int index;
         if(Random.Range(0, 3) != 0)
         {
-            index = Random.Range(0, sentrySpawnPoints.Length-1);
-            Instantiate(sentryPrefab, sentrySpawnPoints[index].position, sentrySpawnPoints[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {sentryWeapon}, 30, 3, null, this, 0);
+            index = Random.Range(0, sentrySpawns.Length-1);
+            Instantiate(sentryPrefab, sentrySpawns[index].position, sentrySpawns[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {SentryWeapon}, 30, 3, null, this, 0);
             if(Random.Range(0, 4) == 0)
             {
-                index = Random.Range(0, sentrySpawnPoints.Length-1);
-                Instantiate(sentryPrefab, sentrySpawnPoints[index].position, sentrySpawnPoints[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {sentryWeapon}, 30, 3, null, this, 0);
+                index = Random.Range(0, sentrySpawns.Length-1);
+                Instantiate(sentryPrefab, sentrySpawns[index].position, sentrySpawns[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {SentryWeapon}, 30, 3, null, this, 0);
             }
+        }
+        
+        if(DoubleFloored)
+        {
+            index = Random.Range(0, floor2SentrySpawns.Length-1);
+            Instantiate(sentryPrefab, floor2SentrySpawns[index].position, floor2SentrySpawns[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {SentryWeapon}, 30, 3, null, this, 0);
         }
 
 
         // ===============================================================
         // ======================= Enemy Spawn ===========================
         // ===============================================================
-        bool[] usedPoints = new bool[spawnPoints.Length];
-        int count = Random.Range(1, Mathf.FloorToInt(spawnPoints.Length/4));
+        bool[] usedPoints = new bool[enemySpawns.Length];
+        int count = Random.Range(1, Mathf.FloorToInt(enemySpawns.Length/4));
         int x=0;
         while(x<count)
         {
             if(CheckAllSpawnUsed(usedPoints)) break;
-            index = Random.Range(0, spawnPoints.Length-1);
+            index = Random.Range(0, enemySpawns.Length-1);
             if(usedPoints[index]) continue;
             usedPoints[index] = true;
 
             float health = Random.Range(healthRange.x, healthRange.y);
             
             float fireDelay;
-            int index2 = Random.Range(0, possibleEnemyWeapons.Length-1);
-            if(Random.Range(0, 5) == 0) index2 = possibleEnemyWeapons.Length-1;
+            int index2 = Random.Range(0, EnemyWeapons.Length-1);
+            if(Random.Range(0, 5) == 0) index2 = EnemyWeapons.Length-1;
 
             if(index2 == 0 || index2 == 3) fireDelay = 0.35f;
             else if(index2 == 4) fireDelay = 3;
             else fireDelay = Random.Range(fireDelayRange.x, fireDelayRange.y);
 
-            Instantiate(enemyPrefab, spawnPoints[index].position, spawnPoints[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {possibleEnemyWeapons[index2]}, health, fireDelay, null, this, 0);
+            Instantiate(enemyPrefab, enemySpawns[index].position, enemySpawns[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {EnemyWeapons[index2]}, health, fireDelay, null, this, 0);
             x+=1;
+        }
+
+        if(DoubleFloored){
+            usedPoints = new bool[floor2EnemySpawns.Length];
+            count = Random.Range(1, Mathf.FloorToInt(floor2EnemySpawns.Length/2));
+            x=0;
+            while(x<count)
+            {
+                if(CheckAllSpawnUsed(usedPoints)) break;
+                index = Random.Range(0, floor2EnemySpawns.Length-1);
+                if(usedPoints[index]) continue;
+                usedPoints[index] = true;
+
+                float health = Random.Range(healthRange.x, healthRange.y);
+                
+                float fireDelay;
+                int index2 = Random.Range(0, EnemyWeapons.Length-1);
+                if(Random.Range(0, 5) == 0) index2 = EnemyWeapons.Length-1;
+
+                if(index2 == 0 || index2 == 3) fireDelay = 0.35f;
+                else if(index2 == 4) fireDelay = 3;
+                else fireDelay = Random.Range(fireDelayRange.x, fireDelayRange.y);
+
+                Instantiate(enemyPrefab, floor2EnemySpawns[index].position, floor2EnemySpawns[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {EnemyWeapons[index2]}, health, fireDelay, null, this, 0);
+                x+=1;
+            }
         }
 
         // ===============================================================
@@ -132,10 +167,10 @@ public class RoomBehaviour : MonoBehaviour
         // ===============================================================
         if(Random.Range(0,3) == 0)
         {
-            index = Random.Range(0, possibleEnemyWeapons.Length);
+            index = Random.Range(0, EnemyWeapons.Length);
 
             int index2 = Random.Range(0, droneMovePts.Count);
-            if(Random.Range(0, 5) == 0) index2 = possibleEnemyWeapons.Length-1;
+            if(Random.Range(0, 5) == 0) index2 = EnemyWeapons.Length-1;
 
             float fireDelay;
             if(index == 0 || index == 3) fireDelay = 0.35f;
@@ -143,7 +178,24 @@ public class RoomBehaviour : MonoBehaviour
             else fireDelay = Random.Range(fireDelayRange.x, fireDelayRange.y);
 
             Enemy drone = Instantiate(dronePrefab, droneMovePts[index2].position, droneMovePts[index2].rotation, transform).GetComponent<Enemy>();
-            drone.Init(new ScriptableWeapon[] {possibleEnemyWeapons[index]}, 30, fireDelay, null, this, index2);
+            drone.Init(new ScriptableWeapon[] {EnemyWeapons[index]}, 30, fireDelay, null, this, index2);
+            dronesSpawned.Add(drone);
+        }
+
+        if(DoubleFloored && Random.Range(0,3) == 0)
+        {
+            index = Random.Range(0, EnemyWeapons.Length);
+
+            int index2 = Random.Range(0, droneMovePts.Count);
+            if(Random.Range(0, 5) == 0) index2 = EnemyWeapons.Length-1;
+
+            float fireDelay;
+            if(index == 0 || index == 3) fireDelay = 0.35f;
+            else if(index == 4) fireDelay = 3;
+            else fireDelay = Random.Range(fireDelayRange.x, fireDelayRange.y);
+
+            Enemy drone = Instantiate(dronePrefab, droneMovePts[index2].position, droneMovePts[index2].rotation, transform).GetComponent<Enemy>();
+            drone.Init(new ScriptableWeapon[] {EnemyWeapons[index]}, 30, fireDelay, null, this, index2);
             dronesSpawned.Add(drone);
         }
 
@@ -153,23 +205,23 @@ public class RoomBehaviour : MonoBehaviour
         if(Random.Range(0, 5) != 0)
         {
             x = 0;
-            count = Random.Range(1, possibleLootSpawns.Length-1);
-            usedPoints = new bool[lootSpawnPoints.Length];
+            count = Random.Range(1, Powerups.Length-1);
+            usedPoints = new bool[PowerupSpawns.Length];
             while(x < count)
             {
                 if(CheckAllSpawnUsed(usedPoints)) break;
-                do index = Random.Range(0, lootSpawnPoints.Length); while(usedPoints[index]);
+                do index = Random.Range(0, PowerupSpawns.Length); while(usedPoints[index]);
 
                 usedPoints[index] = true;
-                Instantiate(possibleLootSpawns[x], lootSpawnPoints[index].position, lootSpawnPoints[index].rotation, transform);
+                Instantiate(Powerups[x], PowerupSpawns[index].position, PowerupSpawns[index].rotation, transform);
                 x+=1;
             }
 
             if(Random.Range(0, 5) == 0 && !CheckAllSpawnUsed(usedPoints))
             {
-                do index = Random.Range(0, lootSpawnPoints.Length); while(usedPoints[index]);
+                do index = Random.Range(0, PowerupSpawns.Length); while(usedPoints[index]);
                 usedPoints[index] = true;
-                Instantiate(possibleLootSpawns[Random.Range(possibleLootSpawns.Length-2, possibleLootSpawns.Length)], lootSpawnPoints[index].position, lootSpawnPoints[index].rotation, transform);
+                Instantiate(Powerups[Random.Range(Powerups.Length-2, Powerups.Length)], PowerupSpawns[index].position, PowerupSpawns[index].rotation, transform);
                 x+=1;
             }
         }

@@ -567,17 +567,16 @@ MonoBehaviour:
   room:
   - variants:
     - {fileID: 8901973711423094536, guid: e7d35f07473b8d8408c8020747e5b078, type: 3}
-    - {fileID: 8901973711423094536, guid: ab5cdaf5105520d4d825396d3d8b4c00, type: 3}
-    - {fileID: 8901973711423094536, guid: 2d6d294a782b3c0438002a803efb833f, type: 3}
-    - {fileID: 8901973711423094536, guid: 3e035454f015d034ea4739e06e016bb5, type: 3}
-    - {fileID: 8901973711423094536, guid: 6bf301c59e6e4444da05874c62a1a8fd, type: 3}
-    - {fileID: 8901973711423094536, guid: 06109a98fc7d230428fc8994c99999fe, type: 3}
+    largeVariants:
+    - {fileID: 8901973711423094536, guid: 2264ae6c1503b7a4d8d614f099d0bd2c, type: 3}
   bossPrefab: {fileID: 5736726172264984688, guid: 159012d9c85a38449b9619300f0e58b1, type: 3}
   sentryPrefab: {fileID: 7169407725932817627, guid: ecf066cab3835454e846a19726c1b411, type: 3}
   enemyPrefab: {fileID: 1719168131344530708, guid: e63ce1a105d79c54cb8d2496d3341187, type: 3}
   dronePrefab: {fileID: 7169407725932817627, guid: 0d771056824a32d4ea65f795e52313ea, type: 3}
   sizeRange: {x: 5, y: 7}
   offset: {x: 42, y: 42}
+  largeOffset: {x: 56.79679, y: 56.80364}
+  largeRoomProbability: {x: 0, y: 5}
   startPos: 0
 --- !u!4 &75897667
 Transform:

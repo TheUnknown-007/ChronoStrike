@@ -65,7 +65,7 @@ public class PlayerMovement : MonoBehaviour
         ControlDrag();
         TakeInput();
 
-        if(Input.GetKeyDown(jumpkey) && isGrounded) Jump();
+        if(Input.GetKeyDown(jumpkey) && isGrounded) Jump(jumpForce);
     }
 
     void FixedUpdate()
@@ -83,18 +83,13 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = new Vector3((rb.velocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).x, rb.velocity.y, (rb.velocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).z);
     }
 
-
-    void Jump()
+    public void Jump(float power)
     {
         isGrounded = false;
         frameDelay = 10;
 
-        //rb.Sleep();
-        //transform.position = new Vector3(transform.position.x, transform.position.y+1.5f, transform.position.z);
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        //rb.WakeUp();
-
-        rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        rb.AddForce(transform.up * power, ForceMode.Impulse);
     }
 
     void TakeInput()

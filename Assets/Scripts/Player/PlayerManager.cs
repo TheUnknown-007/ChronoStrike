@@ -416,4 +416,9 @@ public class PlayerManager : MonoBehaviour
         abberation.intensity.value = enhanceAbberation;
         movementScript.isEnhanced = false;
     }
+
+    public void BoostJump(float power)
+    {
+        movementScript.Jump(power);
+    }
 }

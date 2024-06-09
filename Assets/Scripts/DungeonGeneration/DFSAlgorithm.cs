@@ -6,6 +6,7 @@ using System;
 [Serializable]
 public struct RoomType{
     public GameObject[] variants;
+    public GameObject[] largeVariants;
 }
 
 public class DFSAlgorithm : MonoBehaviour
@@ -19,6 +20,8 @@ public class DFSAlgorithm : MonoBehaviour
     [SerializeField] GameObject dronePrefab;
     [SerializeField] Vector2 sizeRange;
     [SerializeField] Vector2 offset;
+    [SerializeField] Vector2 largeOffset;
+    [SerializeField] Vector2 largeRoomProbability;
     [SerializeField] int startPos = 0;
     int roomType;
     int size;
@@ -28,7 +31,7 @@ public class DFSAlgorithm : MonoBehaviour
     void Start()
     {
         instance = this;
-        size = Mathf.FloorToInt(UnityEngine.Random.Range(sizeRange.x, sizeRange.y));
+        size = UnityEngine.Random.Range((int)sizeRange.x, (int)sizeRange.y+1);
         roomType = UnityEngine.Random.Range(0, room.Length);
         MazeGenerator();
     }
@@ -67,7 +70,13 @@ public class DFSAlgorithm : MonoBehaviour
                 if(currentCell.visited)
                 {
                     int cellID = Mathf.FloorToInt(i + j * size);
-                    GameObject newRoom = Instantiate(room[roomType].variants[UnityEngine.Random.Range(0, room[roomType].variants.Length)], new Vector3(i*offset.x, 0, -j*offset.y), Quaternion.identity, transform);
+                    
+                    GameObject newRoom;
+                    if(UnityEngine.Random.Range((int)largeRoomProbability.x, (int)largeRoomProbability.y) == (int)largeRoomProbability.x)
+                        newRoom = Instantiate(room[roomType].largeVariants[UnityEngine.Random.Range(0, room[roomType].largeVariants.Length)], new Vector3(i*largeOffset.x, 0, -j*largeOffset.y), Quaternion.identity, transform);
+                    else
+                        newRoom = Instantiate(room[roomType].variants[UnityEngine.Random.Range(0, room[roomType].variants.Length)], new Vector3(i*offset.x, 0, -j*offset.y), Quaternion.identity, transform);
+
                     RoomBehaviour script = newRoom.GetComponent<RoomBehaviour>();
                     if(cellID == board.Count-1) script.UpdateRoom(cellID, board[cellID].status, true, null, null, null, bossPrefab, healthSlider);
                     else script.UpdateRoom(cellID, board[cellID].status, false, sentryPrefab, enemyPrefab, dronePrefab, null, healthSlider);
