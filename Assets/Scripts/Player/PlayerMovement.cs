@@ -26,6 +26,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float groundDrag = 6;
     [SerializeField] float airDrag = 2;
 
+    [Header("Slope Handling")]
+    [SerializeField] float maxSlopeAngle;
+    RaycastHit slopeHit;
 
 
     [Header("Keybinds")]
@@ -39,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
     float horizontalMovement;
 
     int frameDelay = 0;
+
+    bool walkingOnSlope;
 
     Vector3 moveDirection;
     Rigidbody rb;
@@ -57,30 +62,43 @@ public class PlayerMovement : MonoBehaviour
         if(frameDelay == 0) 
         {
             isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, playerHeight/2+0.1f, groundMask);
-            if(isGrounded) rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            if(isGrounded && !walkingOnSlope) rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         } else frameDelay--;
 
         moveSpeed = Mathf.Lerp(moveSpeed, isEnhanced ? enhancedSpeed : walkSpeed, acceleration * Time.deltaTime);
         
         ControlDrag();
         TakeInput();
+        CheckSlope();
+        
+        rb.useGravity = !walkingOnSlope;
+        GetComponent<ConstantForce>().enabled = !walkingOnSlope;
 
         if(Input.GetKeyDown(jumpkey) && isGrounded) Jump(jumpForce);
     }
 
     void FixedUpdate()
     {
-        if(isMoving)
+        if(!isMoving) return;
+
+
+        if(walkingOnSlope)
+            rb.AddForce(GetSlopeMoveDirection()  * moveSpeed * (isGrounded ? 1 : airMultiplier), ForceMode.Acceleration);
+        else
             rb.AddForce(moveDirection.normalized * moveSpeed * (isGrounded ? 1 : airMultiplier), ForceMode.Acceleration);
-        ControlDrag();
     }
 
     void ControlDrag()
     {
         if(isGrounded) rb.drag = groundDrag;
         else rb.drag = airDrag;
-        if(new Vector3(rb.velocity.x, 0, rb.velocity.z).magnitude >= (isEnhanced ? enhancedMaxVel : maxVelocity))
-            rb.velocity = new Vector3((rb.velocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).x, rb.velocity.y, (rb.velocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).z);
+        
+        if(!walkingOnSlope)
+        {
+            Vector3 flatVelocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            if(flatVelocity.magnitude >= (isEnhanced ? enhancedMaxVel : maxVelocity))
+                rb.velocity = new Vector3((flatVelocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).x, rb.velocity.y, (flatVelocity.normalized * (isEnhanced ? enhancedMaxVel : maxVelocity)).z);
+        }
     }
 
     public void Jump(float power)
@@ -104,5 +122,20 @@ public class PlayerMovement : MonoBehaviour
 
         isMoving = true;
         moveDirection = orientation.forward * verticalMovement + orientation.right * horizontalMovement;
+    }
+
+    void CheckSlope()
+    {
+        walkingOnSlope = false;
+        if(Physics.Raycast(groundCheck.position, Vector3.down, out slopeHit, playerHeight * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            walkingOnSlope = angle < maxSlopeAngle && angle != 0;
+        }
+    }
+
+    Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 }

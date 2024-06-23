@@ -13,48 +13,48 @@ MonoBehaviour:
   m_Name: Laser
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
   upgradeKills: 0
-  automatic: 0
-  magSize: 0
+  automatic: 1
+  magSize: 500
   fireRate: 0
   burstRate: 0
   bulletsPerBurst: 0
   spreadFactor: 0
-  bulletSpeed: 0
-  bulletDamage: 20
-  lineLength: 0
-  reloadTime: 0
-  recoilMagnitude: 0
-  recoilReturnSpeed: 0
-  recoilSnappines: 0
-  weaponRecoil: 1.5
-  swaySmooth: 0
-  swayMultiplier: 0
+  bulletSpeed: 50000
+  bulletDamage: 5
+  lineLength: 10
+  reloadTime: 4
+  recoilMagnitude: -1
+  recoilReturnSpeed: 2
+  recoilSnappines: 10
+  weaponRecoil: 1.25
+  swaySmooth: 10
+  swayMultiplier: 1
   collateralDamage: 0
   collateralRadius: 0
   shake: 0
-  gunSound: {fileID: 8300000, guid: 0ed0ca410289df84e8085b41f1c4f186, type: 3}
-  impactParticles: {fileID: 5364804623089671519, guid: dab7865c3dbbbde4ab99e1b9906e48da, type: 3}
-  bullet: {fileID: 0}
-  muzzleFlash: {fileID: 7561293926167957526, guid: 7f9fbab3bb5874a4f8cfc5057300867f, type: 3}
+  gunSound: {fileID: 8300000, guid: 2650009c9e65bc54e8c1b8bca10583ff, type: 3}
+  impactParticles: {fileID: 5364804623089671519, guid: 5d3808441f1ee914a9e86757cf0fbbf6, type: 3}
+  bullet: {fileID: 7297281510608327928, guid: ecbe56c030d88124aba802d60bd9cfd0, type: 3}
+  muzzleFlash: {fileID: 7561293926167957526, guid: 11a9fbff0785cc24c92b9f1958bf81b9, type: 3}
   bulletColor:
     serializedVersion: 2
-    key0: {r: 1, g: 0.08282871, b: 0, a: 0}
-    key1: {r: 1, g: 0.08282871, b: 0, a: 0}
-    key2: {r: 0.4339623, g: 0.05167653, b: 0.038892835, a: 0}
-    key3: {r: 0.4339623, g: 0.05167654, b: 0.038892835, a: 0}
+    key0: {r: 0, g: 0.1720128, b: 1, a: 1}
+    key1: {r: 0, g: 0.885386, b: 1, a: 0}
+    key2: {r: 0, g: 0.49549955, b: 0.6698113, a: 0}
+    key3: {r: 0, g: 0.040163077, b: 0.23584908, a: 0}
     key4: {r: 0, g: 0, b: 0, a: 0}
     key5: {r: 0, g: 0, b: 0, a: 0}
     key6: {r: 0, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 65535
+    ctime1: 18504
     ctime2: 35659
-    ctime3: 36815
-    ctime4: 55319
+    ctime3: 50115
+    ctime4: 0
     ctime5: 0
     ctime6: 0
     ctime7: 0
-    atime0: 0
+    atime0: 48959
     atime1: 65535
     atime2: 0
     atime3: 0
@@ -64,5 +64,5 @@ MonoBehaviour:
     atime7: 0
     m_Mode: 0
     m_ColorSpace: -1
-    m_NumColorKeys: 2
+    m_NumColorKeys: 4
     m_NumAlphaKeys: 2

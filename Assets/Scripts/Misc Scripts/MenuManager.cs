@@ -4,18 +4,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.Audio;
 
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] Animator Fader;
     [SerializeField] TMP_Dropdown resDropDown;
     [SerializeField] TMP_Dropdown graphicDropDown;
-    [SerializeField] TMP_Dropdown reflectionDropDown;
+    [SerializeField] Slider FOVSlider;
+    [SerializeField] Slider VolumeSlider;
+    [SerializeField] Slider MusicVolumeSlider;
     [SerializeField] Toggle fullscreenToggle;
     [SerializeField] Toggle gunCamToggle;
+    [SerializeField] Toggle reflectionToggle;
     [SerializeField] GameObject SettingsMenu;
     [SerializeField] GameObject MainMenu;
     [SerializeField] PlayerState gameplayState;
+    [SerializeField] AudioMixer masterMixer;
+    [SerializeField] AudioMixer musicMixer;
 
     Resolution[] allRes;
     List<Resolution> selectedRes = new List<Resolution>();
@@ -27,15 +33,28 @@ public class MenuManager : MonoBehaviour
     void Start()
     {
         gameplayState.graphicQuality = PlayerPrefs.GetInt("GraphicsQuality", 1);
-        gameplayState.reflectionQuality = PlayerPrefs.GetInt("ReflectionsQuality", 1);
-        gameplayState.gunCamera = PlayerPrefs.GetInt("GunCamera", 1) == 1;
+        gameplayState.weaponCamera = PlayerPrefs.GetInt("GunCamera", 1) == 1;
         gameplayState.fullscreen = PlayerPrefs.GetInt("FullScreen", 1) == 1;
+        gameplayState.reflectionEnabled = PlayerPrefs.GetInt("EnableReflection", 1) == 1;
+        gameplayState.FOV = PlayerPrefs.GetFloat("FOV", 90);
+
+        gameplayState.volume = PlayerPrefs.GetFloat("Volume", 100);
+        gameplayState.musicVolume = PlayerPrefs.GetFloat("MusicVolume", 100);
+        if(gameplayState.volume < 1) gameplayState.volume = 0.001f;
+        if(gameplayState.musicVolume < 1) gameplayState.musicVolume = 0.001f;
+        musicMixer.SetFloat("MusicVolume", Mathf.Log10(gameplayState.musicVolume / 100) * 20f);
+        masterMixer.SetFloat("MasterVolume", Mathf.Log10(gameplayState.volume / 100) * 20f);
+
         isFullScreen = gameplayState.fullscreen;
 
         graphicDropDown.SetValueWithoutNotify(gameplayState.graphicQuality);
-        reflectionDropDown.SetValueWithoutNotify(gameplayState.reflectionQuality);
-        gunCamToggle.SetIsOnWithoutNotify(gameplayState.gunCamera);
+        FOVSlider.SetValueWithoutNotify(gameplayState.FOV);
+        VolumeSlider.SetValueWithoutNotify(gameplayState.volume);
+        MusicVolumeSlider.SetValueWithoutNotify(gameplayState.musicVolume);
+
         fullscreenToggle.SetIsOnWithoutNotify(gameplayState.fullscreen);
+        gunCamToggle.SetIsOnWithoutNotify(gameplayState.weaponCamera);
+        reflectionToggle.SetIsOnWithoutNotify(gameplayState.reflectionEnabled);
         
         indices.Clear();
         resDropDown.ClearOptions();
@@ -51,7 +70,7 @@ public class MenuManager : MonoBehaviour
             selectedRes.Add(res);
             
             if(Screen.currentResolution.width == res.width && Screen.currentResolution.height == res.height)
-                currentRes = selectedRes.Count-1;
+                currentRes = selectedRes.Count - 1;
         }
         currentRes = PlayerPrefs.GetInt("Resolution", currentRes);
         gameplayState.resolutionIndex = currentRes;
@@ -71,7 +90,6 @@ public class MenuManager : MonoBehaviour
         MainMenu.SetActive(!active);
         
         if(!active) Screen.SetResolution(selectedRes[currentRes].width, selectedRes[currentRes].height, isFullScreen);
-        Debug.Log(selectedRes[currentRes].width + "x" + selectedRes[currentRes].height);
     }
 
     public void SetQuality(int index)
@@ -80,12 +98,37 @@ public class MenuManager : MonoBehaviour
         PlayerPrefs.SetInt("GraphicsQuality", gameplayState.graphicQuality);
     }
 
+    public void SetVolume(float _value)
+    {
+        if(_value < 1) _value = 0.001f;
+
+        gameplayState.volume = _value;
+        VolumeSlider.SetValueWithoutNotify(_value);
+        PlayerPrefs.SetFloat("Volume", gameplayState.volume);
+        masterMixer.SetFloat("MasterVolume", Mathf.Log10(_value / 100) * 20f);
+    }
+
+    public void SetMusicVolume(float _value)
+    {
+        if(_value < 1) _value = 0.001f;
+
+        gameplayState.musicVolume = _value;
+        MusicVolumeSlider.SetValueWithoutNotify(_value);
+        PlayerPrefs.SetFloat("MusicVolume", gameplayState.musicVolume);
+        musicMixer.SetFloat("MusicVolume", Mathf.Log10(_value / 100) * 20f);
+    }
+
+    public void SetFOV(float value)
+    {
+        gameplayState.FOV = value;
+        PlayerPrefs.SetFloat("FOV", gameplayState.FOV);
+    }
+
     public void SetResolution(int index)
     {
         currentRes = index;
         gameplayState.resolutionIndex = index;
         Screen.SetResolution(selectedRes[currentRes].width, selectedRes[currentRes].height, isFullScreen);
-        Debug.Log(selectedRes[currentRes].width + "x" + selectedRes[currentRes].height);
         PlayerPrefs.SetInt("Resolution", gameplayState.resolutionIndex);
     }
 
@@ -94,26 +137,25 @@ public class MenuManager : MonoBehaviour
         isFullScreen = active;
         gameplayState.fullscreen = active;
         Screen.SetResolution(selectedRes[currentRes].width, selectedRes[currentRes].height, isFullScreen);
-        Debug.Log(selectedRes[currentRes].width + "x" + selectedRes[currentRes].height);
         PlayerPrefs.SetInt("FullScreen", gameplayState.fullscreen ? 1 : 0);
-    }
-
-    public void SetReflectionQuality(int index)
-    {
-        gameplayState.reflectionQuality = index;
-        PlayerPrefs.SetInt("ReflectionsQuality", gameplayState.reflectionQuality);
     }
 
     public void SetGunCamera(bool active)
     {
         gameplayState.weaponCamera = active;
-        PlayerPrefs.SetInt("GunCamera", gameplayState.gunCamera ? 1 : 0);
+        PlayerPrefs.SetInt("GunCamera", gameplayState.weaponCamera ? 1 : 0);
+    }
+
+    public void SetReflections(bool active)
+    {
+        gameplayState.reflectionEnabled = active;
+        PlayerPrefs.SetInt("EnableReflection", gameplayState.reflectionEnabled ? 1 : 0);
     }
 
     IEnumerator Transition()
     {
         Fader.Play("FadeIn");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.75f);
         SceneManager.LoadScene(1);
     }
 }

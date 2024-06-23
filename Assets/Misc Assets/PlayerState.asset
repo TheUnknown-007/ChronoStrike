@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: PlayerState
   m_EditorClassIdentifier: 
   resolutionIndex: 17
+  reflectionEnabled: 1
   fullscreen: 1
-  gunCamera: 0
-  graphicQuality: 0
-  reflectionQuality: 0
-  weaponCamera: 0
+  weaponCamera: 1
+  graphicQuality: 1
+  FOV: 90
+  volume: 1
+  musicVolume: 1
   waveCount: 0
   continuePlay: 0
   currentScore: -1

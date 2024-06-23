@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4bc42b7c660fa1459e45acc4f857087, type: 3}
   m_Name: Famas
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
-  upgradeKills: 3
+  upgradeKills: 5
   automatic: 0
   magSize: 25
   fireRate: 0.3

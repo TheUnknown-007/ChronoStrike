@@ -3,24 +3,18 @@ using UnityEngine;
 
 public class BossWeapon : MonoBehaviour
 {
-    ScriptableObject weapon;
-    [SerializeField] GameObject explosion;
-    [SerializeField] LayerMask visiblityMask;
+    public LayerMask visiblityMask;
 
     [SerializeField] AudioSource gunSource;
-    [SerializeField] Transform bulletPoint;
     [SerializeField] Transform bulletParent;
-    bool firing;
-    GameObject player;
-    RaycastHit hit;
+    public Transform bulletPoint;
+    public bool firing;
     float FireDelay;
-
-    float currentHealth;
+    GameObject player;
     ScriptableWeapon currentWeapon;
 
-    public void Init(ScriptableWeapon weapon, float health, float fireDelay)
+    public void Init(ScriptableWeapon weapon, float fireDelay)
     {
-        currentHealth = health;
         player = PlayerManager.instance.gameObject;
         currentWeapon = weapon;
         FireDelay = fireDelay;
@@ -31,28 +25,9 @@ public class BossWeapon : MonoBehaviour
         bulletParent.transform.LookAt(player.transform);
     }
 
-    void FixedUpdate()
+    public void StartShooting()
     {
-        if(Physics.Raycast(bulletPoint.position, bulletPoint.transform.forward, out hit, 1000, visiblityMask))
-        {
-            Debug.DrawLine(bulletPoint.position, hit.point);
-            if(hit.collider.CompareTag("Player") && !PlayerManager.instance.isDead)
-            {
-                if(firing) return;
-                firing = true;
-                StartCoroutine(FireAtPlayer());
-            }
-            else
-            {
-                StopAllCoroutines();
-                firing = false;
-            }
-        }
-        else
-        {
-            StopAllCoroutines();
-            firing = false;
-        }
+        StartCoroutine(FireAtPlayer());
     }
 
     public void AddDamage(float damage)
@@ -60,8 +35,9 @@ public class BossWeapon : MonoBehaviour
         return;
     }
 
-    IEnumerator FireAtPlayer()
+    public IEnumerator FireAtPlayer()
     {
+        yield return new WaitForSeconds(Random.Range(0.5f, 1f));
         while(firing)
         {
             if(currentWeapon.automatic)

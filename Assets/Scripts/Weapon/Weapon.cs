@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 public class Weapon : MonoBehaviour
 {
@@ -118,10 +117,12 @@ public class Weapon : MonoBehaviour
 
     public void ResetMag()
     {
+        StopAllCoroutines();
         GunAnim.Play("Idle");
         magCount = weaponData.magSize;
         PlayerManager.instance.AmmoChange(weaponData.magSize, magCount);
-        canFire = true;
+        firing = false;
         reloading = false;
+        canFire = true;
     }
 }

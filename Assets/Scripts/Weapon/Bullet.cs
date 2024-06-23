@@ -44,6 +44,7 @@ public class Bullet : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if(other.CompareTag("IgnoreBullet")) return;
         if(other.CompareTag("DungeonCell") || other.gameObject.layer == 8 || other.gameObject.layer == 2) return;
         if(Typee == 0)
         {

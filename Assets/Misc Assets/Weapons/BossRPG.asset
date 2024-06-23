@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableWeapon
   upgradeKills: 0
   automatic: 0
-  magSize: 3
+  magSize: 1
   fireRate: 0.65
   burstRate: 0
   bulletsPerBurst: 1
   spreadFactor: 5
-  bulletSpeed: 30
+  bulletSpeed: 25
   bulletDamage: 30
   lineLength: 0
   reloadTime: 4

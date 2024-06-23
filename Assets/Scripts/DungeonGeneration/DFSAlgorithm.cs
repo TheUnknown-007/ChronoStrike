@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
-using System;
+using Unity.VisualScripting;
+using UnityEngine.SceneManagement;
+using System.Linq;
 
-[Serializable]
+[System.Serializable]
 public struct RoomType{
     public GameObject[] variants;
     public GameObject[] largeVariants;
@@ -11,6 +13,7 @@ public struct RoomType{
 
 public class DFSAlgorithm : MonoBehaviour
 {
+    [SerializeField] int seed;
     public static DFSAlgorithm instance {get; private set;}
     [SerializeField] Slider healthSlider;
     [SerializeField] RoomType[] room;
@@ -19,12 +22,15 @@ public class DFSAlgorithm : MonoBehaviour
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] GameObject dronePrefab;
     [SerializeField] Vector2 sizeRange;
-    [SerializeField] Vector2 offset;
+    [SerializeField] Vector2 roomCountBounds;
     [SerializeField] Vector2 largeOffset;
     [SerializeField] Vector2 largeRoomProbability;
     [SerializeField] int startPos = 0;
+    [SerializeField] PlayerState settings;
     int roomType;
     int size;
+    bool bossSpawned;
+
     List<Cell> board;
     Dictionary<int, GameObject> instantiatedRooms;
 
@@ -34,9 +40,10 @@ public class DFSAlgorithm : MonoBehaviour
         size = UnityEngine.Random.Range((int)sizeRange.x, (int)sizeRange.y+1);
         roomType = UnityEngine.Random.Range(0, room.Length);
         MazeGenerator();
+        UpdateVisibility();
     }
 
-    public void UpdateVisibility(int currentCell) // for optimization, non visible rooms are disabled
+    public void UpdateVisibility(int currentCell = 0) // for optimization, non visible rooms are disabled
     {
         for(int i = 0; i<size; i++)
             for(int j = 0; j<size; j++)
@@ -61,9 +68,40 @@ public class DFSAlgorithm : MonoBehaviour
             }
     }
 
+    System.Collections.IEnumerator DebugGenerate(List<Cell> b, int[] indices)
+    {
+        Transform t = new GameObject("Debug").transform;
+        foreach(int ix in indices)
+        {
+            RoomBehaviour script;
+            if(b[ix].status[4]) script = Instantiate(room[roomType].largeVariants[3], new Vector3(board[ix].y*largeOffset.x, 0, -board[ix].x*largeOffset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
+            else script = Instantiate(room[roomType].variants[1], new Vector3(board[ix].y*largeOffset.x, 0, -board[ix].x*largeOffset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
+            script.UpdateRoom(ix, b[ix].status, false, sentryPrefab, enemyPrefab, dronePrefab, null, healthSlider);
+            script.transform.SetParent(t);
+            yield return new WaitForSeconds(1f);
+        }
+
+        for(int i = 0; i<size; i++)
+        {
+            for(int j = 0; j<size; j++)
+            {
+                int cellID = i + j * size;
+                if(indices.Contains(cellID) || !board[cellID].visited) continue;
+
+                RoomBehaviour script;
+                if(b[cellID].status[4]) script = Instantiate(room[roomType].largeVariants[2], new Vector3(board[cellID].y*largeOffset.x, 0, -board[cellID].x*largeOffset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
+                else script = Instantiate(room[roomType].variants[4], new Vector3(board[cellID].y*largeOffset.x, 0, -board[cellID].x*largeOffset.y), Quaternion.identity, transform).GetComponent<RoomBehaviour>();
+                script.UpdateRoom(cellID, b[cellID].status, false, sentryPrefab, enemyPrefab, dronePrefab, null, healthSlider);
+                script.transform.SetParent(t);
+                yield return new WaitForSeconds(1f);
+            }
+        }
+    }
+
     void GenerateDungeon() // spawns the rooms
     {
         for(int i = 0; i<size; i++)
+        {
             for(int j = 0; j<size; j++)
             {
                 Cell currentCell = board[Mathf.FloorToInt(i + j * size)];
@@ -72,20 +110,23 @@ public class DFSAlgorithm : MonoBehaviour
                     int cellID = Mathf.FloorToInt(i + j * size);
                     
                     GameObject newRoom;
-                    if(UnityEngine.Random.Range((int)largeRoomProbability.x, (int)largeRoomProbability.y) == (int)largeRoomProbability.x)
+                    if(cellID != 0 && UnityEngine.Random.Range((int)largeRoomProbability.x, (int)largeRoomProbability.y) == (int)largeRoomProbability.x)
                         newRoom = Instantiate(room[roomType].largeVariants[UnityEngine.Random.Range(0, room[roomType].largeVariants.Length)], new Vector3(i*largeOffset.x, 0, -j*largeOffset.y), Quaternion.identity, transform);
                     else
-                        newRoom = Instantiate(room[roomType].variants[UnityEngine.Random.Range(0, room[roomType].variants.Length)], new Vector3(i*offset.x, 0, -j*offset.y), Quaternion.identity, transform);
+                        newRoom = Instantiate(room[roomType].variants[UnityEngine.Random.Range(0, room[roomType].variants.Length)], new Vector3(i*largeOffset.x, 0, -j*largeOffset.y), Quaternion.identity, transform);
 
                     RoomBehaviour script = newRoom.GetComponent<RoomBehaviour>();
-                    if(cellID == board.Count-1) script.UpdateRoom(cellID, board[cellID].status, true, null, null, null, bossPrefab, healthSlider);
+                    if(board[cellID].status[4]) script.UpdateRoom(cellID, board[cellID].status, true, null, null, null, bossPrefab, healthSlider);
                     else script.UpdateRoom(cellID, board[cellID].status, false, sentryPrefab, enemyPrefab, dronePrefab, null, healthSlider);
                     newRoom.name += " " + i + ":" + j;
-                    if(cellID != 0) newRoom.SetActive(false);
                     instantiatedRooms[cellID] = newRoom;
+
                 }
             }
-
+        }
+        if(!settings.reflectionEnabled)
+            foreach(ReflectionProbe probe in GetComponentsInChildren<ReflectionProbe>())
+                Destroy(probe.gameObject);
     }
 
     void MazeGenerator() // as the name suggests
@@ -93,23 +134,45 @@ public class DFSAlgorithm : MonoBehaviour
         instantiatedRooms = new Dictionary<int, GameObject>();
         board = new List<Cell>();
         for(int i = 0; i<size; i++)
+        {
             for(int j = 0; j<size; j++)
-                board.Add(new Cell());
+            {
+                Cell c = new Cell();
+                c.x = i;
+                c.y = j;
+                board.Add(c);
+            }
+        }
 
         int currentCell = startPos;
         Stack<int> path = new Stack<int>();
         int k = 0;
 
-        while((k<1000))
+        while(k<1000)
         {
             k++;
             board[currentCell].visited = true;
-            if(currentCell == board.Count-1) break;
+            if((currentCell == board.Count-1 && path.Count >= roomCountBounds.x) || path.Count >= roomCountBounds.y) 
+            {
+                bossSpawned = true;
+                board[currentCell].status[4] = true;
+                path.Push(currentCell);
+                break;
+            }
+
+            
             List<int> neighbours = CheckNeighbours(currentCell);
             if(neighbours.Count == 0)
             {
-                if(path.Count == 0) break;
-                else currentCell = path.Pop();
+                if(path.Count == 0) 
+                {
+                    path.Push(currentCell);
+                    break;
+                }
+                else 
+                {
+                    currentCell = path.Pop();
+                }
             }
             else
             {
@@ -148,25 +211,47 @@ public class DFSAlgorithm : MonoBehaviour
                 }
             }
         }
+        if(!bossSpawned)
+        {
+            Debug.LogError("Boss wasn't spawned, retrying. Bad Seed");
+            Debug.Log(Random.seed);
+            settings.DebugSeed = true;
+            SceneManager.LoadScene(1);
+        }
+
         GenerateDungeon();
     }
 
     List<int> CheckNeighbours(int cell)
     {
         List<int> neighbour = new List<int>();
-        
+
         // Check Up Neighbour
-        if(cell - size >= 0 && !board[Mathf.FloorToInt(cell-size)].visited)
-            neighbour.Add(Mathf.FloorToInt(cell-size));
+        if(cell - size >= 0 && !board[cell-size].visited)
+            neighbour.Add(cell-size);
         // Check Bottom Neighbour
-        if(cell + size < board.Count && !board[Mathf.FloorToInt(cell+size)].visited)
-            neighbour.Add(Mathf.FloorToInt(cell+size));
+        if(cell + size < board.Count && !board[cell+size].visited)
+            neighbour.Add(cell+size);
         // Check Right Neighbour
-        if((cell+1) % size != 0 && !board[Mathf.FloorToInt(cell+1)].visited)
-            neighbour.Add(Mathf.FloorToInt(cell+1));
+        if((cell+1) % size != 0 && !board[cell+1].visited)
+            neighbour.Add(cell+1);
         // Check Left Neighbour
-        if(cell % size != 0 && !board[Mathf.FloorToInt(cell-1)].visited)
-            neighbour.Add(Mathf.FloorToInt(cell-1));
+        if(cell % size != 0 && !board[cell-1].visited)
+            neighbour.Add(cell-1);
+
+
+        // // Check Up Neighbour
+        // if(cell - size >= 0 && !board[cell-size].visited)
+        //     neighbour.Add(cell-size);
+        // // Check Bottom Neighbour
+        // if(cell + size < board.Count && !board[cell+size].visited)
+        //     neighbour.Add(cell+size);
+        // // Check Right Neighbour
+        // if((cell+1) % size != 0 && cell+1 < board.Count && !board[cell+1].visited)
+        //     neighbour.Add(cell+1);
+        // // Check Left Neighbour
+        // if((cell-1) % size != 0 && cell-1 >= 0  && !board[cell-1].visited)
+        //     neighbour.Add(cell-1);
 
         return neighbour;
     }
@@ -174,6 +259,8 @@ public class DFSAlgorithm : MonoBehaviour
     public class Cell
     {
         public bool visited = false;
-        public bool[] status = new bool[4];
+        public bool[] status = new bool[5];
+        public int x;
+        public int y;
     }
 }

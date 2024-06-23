@@ -3,6 +3,11 @@ using UnityEngine;
 public class Powerup : MonoBehaviour
 {
     [SerializeField] int type;
+
+    void Update()
+    {
+        if(type == 3 && PlayerManager.instance.currentWeaponIndex == 8) Destroy(gameObject);
+    }
     
     void OnTriggerEnter(Collider other)
     {

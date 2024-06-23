@@ -20,7 +20,7 @@ MonoBehaviour:
   bulletsPerBurst: 1
   spreadFactor: 5
   bulletSpeed: 20
-  bulletDamage: 30
+  bulletDamage: 50
   lineLength: 0
   reloadTime: 4
   recoilMagnitude: 0
@@ -29,8 +29,8 @@ MonoBehaviour:
   weaponRecoil: 1.5
   swaySmooth: 0
   swayMultiplier: 0
-  collateralDamage: 0
-  collateralRadius: 0
+  collateralDamage: 20
+  collateralRadius: 1
   shake: 0
   gunSound: {fileID: 8300000, guid: 7a2d43efa888aa5489eb426ea3f29e06, type: 3}
   impactParticles: {fileID: 364776266275441260, guid: 955f9b56adb8a7c4abd2819c915d7b33, type: 3}

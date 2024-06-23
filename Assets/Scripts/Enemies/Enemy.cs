@@ -2,11 +2,13 @@ using DitzeGames.Effects;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class Enemy : MonoBehaviour
 {
     public static Vector3 bossPosition { get; private set; }
     [SerializeField] int type = 0;
+    [SerializeField] float orbitSpeed;
     [SerializeField] float moveSpeed;
     [SerializeField] GameObject explosion;
     [SerializeField] LayerMask visiblityMask;
@@ -28,34 +30,55 @@ public class Enemy : MonoBehaviour
     bool alive = true;
     RoomBehaviour room;
     int currentPointIndex = 0;
+    Vector2 target;
+    Vector3 tempPos;
+
     Vector3 targetPosition;
+    Vector3 initialPosition;
 
     public void Init(ScriptableWeapon[] weapon, float health, float fireDelay, Slider healthSlider, RoomBehaviour roomSpawner, int pointIndex)
     {
         if(health <= 10) reward = 10;
-        else if(health >= 11) reward = 20;
-        else if(type == 1) reward = 500;
-        else reward = 30;
+        else if(health > 10 && health < 20) reward = 20;
+        else if(health >= 30) reward = 50;
+        else reward = 70;
+
+        initialPosition = transform.position;
+
         currentHealth = health;
         player = PlayerManager.instance.gameObject;
         currentWeapons = weapon;
         FireDelay = fireDelay;
+
         if(type == 1)
         {
+            reward = 500;
             totalHealth = health;
             HealthSlider = healthSlider;
-            for(int x = 0; x < bossWeapons.Length; x++)
-            {
-                if(x == 0) bossWeapons[0].Init(weapon[0], 50, fireDelay*2);
-                else bossWeapons[x].Init(weapon[1], 30, fireDelay);
-            }
+            bossWeapons[0].Init(weapon[0], fireDelay*2);
+            for(int x = 1; x < bossWeapons.Length; x++)
+                bossWeapons[x].Init(weapon[1], fireDelay);
             bossPosition = transform.position;
         }
+
         else if(type == 2)
         {
             room = roomSpawner;
             room.dronePointUsed[currentPointIndex] = false;
             currentPointIndex = pointIndex;
+        }
+    }
+
+    public void StopShooting()
+    {
+        firing = false;
+        foreach(BossWeapon bW in bossWeapons)
+        {
+            if(bW != bossWeapons[0]) 
+            {
+                bW.StopAllCoroutines();
+                bW.firing = false;
+            }
         }
     }
 
@@ -72,74 +95,116 @@ public class Enemy : MonoBehaviour
 
         if(type == 2)
         {
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(targetPosition.x, transform.position.y, targetPosition.z), Time.deltaTime*moveSpeed);
-            transform.position = new Vector3(
-                    transform.position.x, 
-                    Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, targetPosition.y, transform.position.z), Time.deltaTime*0.25f*moveSpeed).y,
-                    transform.position.z
-            );
+            if(firing)
+            {
+                targetPosition = transform.position;
+
+                // Orbit around a fixed distance
+                transform.RotateAround(PlayerManager.instance.transform.position, Vector3.up, Time.deltaTime*orbitSpeed);
+                
+                tempPos = transform.position;
+                tempPos.y = PlayerManager.instance.transform.position.y;
+                tempPos -= PlayerManager.instance.transform.position;
+
+                transform.position = PlayerManager.instance.transform.position + tempPos.normalized * target.y;
+
+                // Clamp the drone movement around the room bounds
+                tempPos = transform.position;
+                tempPos.x = Mathf.Clamp(tempPos.x, room.transform.position.x-11, room.transform.position.x+11);
+                tempPos.z = Mathf.Clamp(tempPos.z, room.transform.position.z-10, room.transform.position.z+11);
+                tempPos.y = Mathf.Clamp(target.x, 2, 5);
+
+                // Save the calculated values
+                transform.position = targetPosition;
+                targetPosition = tempPos;
+            }
+            else targetPosition = initialPosition;
+
+            // Move Towards the calculated position
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime*moveSpeed);
         }
     }
 
     void FixedUpdate()
     {
-        if(type == 1) return;
+        if(type == 1) 
+        {
+            bool found = false;
+            foreach(BossWeapon bW in bossWeapons)
+            {
+                if(Physics.Raycast(bW.bulletPoint.position, bW.bulletPoint.transform.forward, out hit, 1000, bW.visiblityMask))
+                {
+                    if(hit.collider.CompareTag("Player") && !PlayerManager.instance.isDead)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if(found && firing) return;
+
+            if(found)
+            {
+                firing = true;
+                foreach(BossWeapon bW in bossWeapons)
+                {
+                    bW.firing = true;
+                    bW.StartShooting();
+                }
+            }
+            else StopShooting();
+
+            return;          
+        }
+
         if(Physics.Raycast(bulletPoint.position, bulletPoint.transform.forward, out hit, 1000, visiblityMask))
         {
-            Debug.DrawLine(bulletPoint.position, hit.point);
             if(hit.collider.CompareTag("Player") && !PlayerManager.instance.isDead)
             {
                 if(firing) return;
                 firing = true;
                 StartCoroutine(FireAtPlayer());
+                if(type == 2) EnableBehavior();
             }
             else
             {
                 StopAllCoroutines();
-                if(type == 2) EnableBehavior();
                 firing = false;
             }
         }
         else
         {
             StopAllCoroutines();
-            if(type == 2) EnableBehavior();
             firing = false;
         }
     }
 
     public void EnableBehavior()
     {
+        StartCoroutine(DroneHeightBehaviour());
         StartCoroutine(DroneBehaviour());
-        StartCoroutine(DroneHeightBob());
     }
 
-    IEnumerator DroneHeightBob()
+    IEnumerator DroneHeightBehaviour()
     {
-        yield return new WaitForSeconds(0.25f);
+        yield return new WaitForSeconds(1f);
         while(true)
         {
-            targetPosition += Vector3.up * Random.Range(-1f,1f);
-            targetPosition = new Vector3(targetPosition.x, Mathf.Clamp(targetPosition.y, 2, 5), targetPosition.z);
-            yield return new WaitForSeconds(0.25f);
+            target.x += Random.Range(-3f,3f);
+            target.x = Mathf.Clamp(target.x, 2, 5);
+            yield return new WaitForSeconds(3f);
         }
     }
 
     IEnumerator DroneBehaviour()
     {
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1f);
         while(true)
         {
-            int x = 0;
-            room.CheckDroneScores();
-            while(room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] && x < room.droneMovePts.Count) x+=1;
-            targetPosition = Vector3.up*Random.Range(2,6) + room.droneMovePts[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]].position;
-            
-            room.dronePointUsed[currentPointIndex] = false;
-            room.dronePointUsed[room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]]] = true;
-            currentPointIndex = room.sortedDroneMoveScores[room.sortedDroneMoveScores.Keys[x]];
-
-            yield return new WaitForSeconds(1);
+            target.y += Random.Range(-3f,3f);
+            target.y = Mathf.Clamp(target.y, 4f,9f);
+            yield return new WaitForSeconds(1.5f);
         }
     }
 
@@ -162,6 +227,8 @@ public class Enemy : MonoBehaviour
 
     IEnumerator FireAtPlayer()
     {
+        yield return new WaitForSeconds(Random.Range(0.25f, 0.5f));
+
         while(firing)
         {
             if(currentWeapons[0].automatic)

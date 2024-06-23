@@ -10,13 +10,14 @@ using static System.Math;
 public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager instance {get; private set;}
+
+
     [Header("Settings Menu References")]
+    [SerializeField] string cheatCode;
     [SerializeField] Camera mainCamera;
     [SerializeField] Camera weaponCamera;
     [SerializeField] LayerMask withWeaponMask;
     [SerializeField] LayerMask withoutWeaponMask;
-    [SerializeField] ScreenSpaceReflectionPresetParameter ssReflectQualityMid;
-    [SerializeField] ScreenSpaceReflectionPresetParameter ssReflectQualityUltra;
 
     [Space, SerializeField] float damageMultiplier = 1.5f;
     [SerializeField] GameObject gameOverScreen;
@@ -41,7 +42,6 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] TMP_Text bullets;
     [SerializeField] Slider bulletsSlide;
     [SerializeField] Image hitEffect;
-    [SerializeField] Image enhancedEffect;
     [SerializeField] float effectDisappearSpeed;
     [Space, SerializeField] GameObject[] weaponObjects;
     [SerializeField] Transform recoilObject;
@@ -56,6 +56,9 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] int enhanceFishEye = -80;
     [SerializeField] float defaultAbberation = 0.7f;
     [SerializeField] float enhanceAbberation = 1;
+    [SerializeField] float defaultVignette = 0.35f;
+    [SerializeField] float enhanceVignette = 0.5f;
+    [SerializeField] float enhanceEffectDisappearSpeed;
     [Space, SerializeField] TMP_Text endScore;
     [Space, SerializeField] TMP_Text endHScor;
     [Space, SerializeField] TMP_Text endKills;
@@ -65,13 +68,13 @@ public class PlayerManager : MonoBehaviour
 
     LensDistortion fishEyeEffect;
     ChromaticAberration abberation;
-    ScreenSpaceReflections ssReflect;
+    Vignette vignet;
 
     int currentKills = 0;
     [HideInInspector] public bool isDead {get; private set;}
 
     bool weaponPowerup;
-    int currentWeaponIndex = 0;
+    public int currentWeaponIndex {get; private set;} = 0;
 
     bool armour;
     float armourDurability;
@@ -81,6 +84,10 @@ public class PlayerManager : MonoBehaviour
     int waveCount;
     int killCount;
 
+    int cheatCodeIndex;
+
+    int upgradedWeaponIndex = -1;
+
     Vector3 currentRotation;
     Vector3 targetRotation;
     Vector3 currentRotation2;
@@ -88,19 +95,26 @@ public class PlayerManager : MonoBehaviour
     float currentReturnSpeed;
     float currentSnappiness;
 
+    Coroutine savedWeaponRoutine;
+    Coroutine savedEnhanceRoutine;
+
+    bool lazerGiven;
+    bool boosTriggered;
+
     string[] timeCodes = {"h ", "m ", "s"};
 
     void Awake()
     {
+        timeStarted = Time.time;
         instance = this;
 
         vfx.profile.TryGetSettings(out fishEyeEffect);
         vfx.profile.TryGetSettings(out abberation);
-        vfx.profile.TryGetSettings(out ssReflect);
+        vfx.profile.TryGetSettings(out vignet);
 
         SetQuality(gameplayState.graphicQuality);
-        SetReflectionQuality(gameplayState.reflectionQuality);
         SetGunCamera(gameplayState.weaponCamera);
+        SetFOV(gameplayState.FOV);
 
         currentHealth = startHealth;
         healthSlide.value = 1;
@@ -129,11 +143,6 @@ public class PlayerManager : MonoBehaviour
         Music[Mathf.FloorToInt(Random.Range(0, Music.Length-1))].Play();
     }
 
-    void Start()
-    {
-        DFSAlgorithm.instance.UpdateVisibility(0);
-    }
-
     void Update()
     {
         if(isDead) return;
@@ -152,24 +161,41 @@ public class PlayerManager : MonoBehaviour
         hitEffect.color = new Color(hitEffect.color.r, hitEffect.color.g, hitEffect.color.b, Mathf.Lerp(hitEffect.color.a, 0, Time.deltaTime*effectDisappearSpeed));
         if(movementScript.isEnhanced)
         {
-            enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, Mathf.Lerp(enhancedEffect.color.a, 0.0625f, Time.deltaTime*0.5f*effectDisappearSpeed));
-            fishEyeEffect.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, enhanceFishEye, Time.deltaTime*0.5f*effectDisappearSpeed);
-            abberation.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, enhanceAbberation, Time.deltaTime*0.5f*effectDisappearSpeed);
+            fishEyeEffect.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, enhanceFishEye, Time.deltaTime*enhanceEffectDisappearSpeed);
+            abberation.intensity.value = Mathf.Lerp(abberation.intensity.value, enhanceAbberation, Time.deltaTime*enhanceEffectDisappearSpeed);
+            vignet.intensity.value = Mathf.Lerp(vignet.intensity.value, enhanceVignette, Time.deltaTime*enhanceEffectDisappearSpeed);
         }
         else
         {
-            enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, Mathf.Lerp(enhancedEffect.color.a, 0, Time.deltaTime*0.25f*effectDisappearSpeed));
-            fishEyeEffect.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, defaultFishEye, Time.deltaTime*0.5f*effectDisappearSpeed);
-            abberation.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, defaultAbberation, Time.deltaTime*0.5f*effectDisappearSpeed);
+            fishEyeEffect.intensity.value = Mathf.Lerp(fishEyeEffect.intensity.value, defaultFishEye, Time.deltaTime*enhanceEffectDisappearSpeed);
+            abberation.intensity.value = Mathf.Lerp(abberation.intensity.value, defaultAbberation, Time.deltaTime*enhanceEffectDisappearSpeed);
+            vignet.intensity.value = Mathf.Lerp(vignet.intensity.value, defaultVignette, Time.deltaTime*enhanceEffectDisappearSpeed);
+        }
+
+
+        // Lazer Gun Cheat
+        if(!lazerGiven)
+        {
+            if (Input.anyKeyDown) {
+                if (Input.GetKeyDown(cheatCode[cheatCodeIndex].ToString())) cheatCodeIndex++;
+                else cheatCodeIndex = 0;
+            }
+            
+            if (cheatCodeIndex == cheatCode.Length)
+            {
+                lazerGiven = true;
+                GiveLazer();
+            }
         }
     }
 
     public void TriggerBoss()
     {
-        if(isDead) return;
+        if(isDead || boosTriggered) return;
         
+        boosTriggered = true;
         bossHealth.Play("PopIn");
-        bossName.text = "Mr" + (new string[] {"Robot", "Evil", "Unknown", "Bot", "BlackHat"})[Random.Range(0,5)];
+        bossName.text = (new string[] {"Dr. ", "Mr. ", "Cpt. ", "Sgt. ", ""})[Random.Range(0,5)] + (new string[] {"Nova", "Smith", "Insig", "BlackHat", "Vector", "Kali"})[Random.Range(0,6)];
     }
 
     public void AddRecoil(float recoilMagnitude, float weaponRecoil, float returnSpeed, float returnSnappiness)
@@ -191,20 +217,36 @@ public class PlayerManager : MonoBehaviour
         soundSource.PlayOneShot(hurt);
         if(armour) 
         {
-            float newVal = damage*1.5f / (armourDurability*0.25f);
-            currentHealth -= newVal;
-            armourDurability -= damage - newVal;
-            armorSlide.value = armourDurability/50;
+            float healthDecrement = damage * damageMultiplier * 0.15f;
+            float armourDecrement = damage * damageMultiplier * 0.50f;
+            if(healthDecrement <= 1) healthDecrement = Random.Range(0, 2);
+            if(armourDecrement < 2) armourDecrement = 2;
+
+            currentHealth -= healthDecrement;
+            armourDurability -= armourDecrement;
+            if(armourDurability <= 0) 
+            {
+                armourDurability = 0;
+                armour = false;
+                healthSlide.value = 0;
+            }
+
+            armorSlide.value = armourDurability/100;
             armor.text = Mathf.FloorToInt(armourDurability).ToString();
-            if(armourDurability <= 0) armour = false;
         }
         else
             currentHealth -= damage * damageMultiplier;
 
+        if(currentHealth <= 0) 
+        {
+            currentHealth = 0;
+            healthSlide.value = 0;
+            health.text = "0";
+            Die();
+        }
+
         healthSlide.value = currentHealth/startHealth;
         health.text = Mathf.FloorToInt(currentHealth).ToString();
-        
-        if(currentHealth <= 0 || health.text == "0") Die();
     }
 
     void Die()
@@ -225,7 +267,7 @@ public class PlayerManager : MonoBehaviour
         endHScor.text = "HighScore: " + highScore.ToString();
         endScore.text = "Score: " + currentScore.ToString();
         endKills.text = "Kills: " + killCount.ToString();
-        endTimeS.text = FormatTime(Time.time - timeStarted) + (Time.time - timeStarted < 5 ? ". how?" : (Time.time - timeStarted < 10 ? ". lol noob" : ""));
+        endTimeS.text = FormatTime(Time.time - timeStarted) + (Time.time - timeStarted < 5 ? " how?" : "");
 
         weaponObjects[currentWeaponIndex].SetActive(false);
         fade.Play("FadeIn");
@@ -250,10 +292,9 @@ public class PlayerManager : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(isDead) return;
+        if(isDead || !other.CompareTag("DungeonCell") || other.GetComponent<RoomBehaviour>().id == 0) return;
         
-        if(other.CompareTag("DungeonCell"))
-            DFSAlgorithm.instance.UpdateVisibility(other.GetComponent<RoomBehaviour>().id);
+        DFSAlgorithm.instance.UpdateVisibility(other.GetComponent<RoomBehaviour>().id);
     }
 
     public void AddScore(int value)
@@ -284,9 +325,9 @@ public class PlayerManager : MonoBehaviour
         
         soundSource.PlayOneShot(powerup);
         armour = true;
-        armourDurability = 50;
+        armourDurability = 100;
         armorSlide.value = 1;
-        armor.text = "50";
+        armor.text = "100";
     }
 
     public void AddHealth()
@@ -301,29 +342,42 @@ public class PlayerManager : MonoBehaviour
 
     public void GiveWeapon(int index, int second)
     {
-        if(isDead) return;
-        
+        if(savedWeaponRoutine != null) StopCoroutine(savedWeaponRoutine);
+
         soundSource.PlayOneShot(powerup);
-        StopCoroutine(WeaponTimer(index, second));
-        StartCoroutine(WeaponTimer(index, second));
+        weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
+        if(isDead || currentWeaponIndex == weaponObjects.Length-1 || index <= currentWeaponIndex) return;
+        
+        savedWeaponRoutine = StartCoroutine(WeaponTimer(index, second));
     }
 
     public IEnumerator WeaponTimer(int index, int second)
     {
-        if(currentWeaponIndex == weaponObjects.Length-1) 
-            weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
-        
+        if(upgradedWeaponIndex != -1)
+        {
+            weaponObjects[upgradedWeaponIndex].GetComponent<Weapon>().ResetMag();
+            weaponObjects[upgradedWeaponIndex].SetActive(false);
+            upgradedWeaponIndex = -1;
+        }
+
         weaponPowerup = true;
+        weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
         weaponObjects[currentWeaponIndex].SetActive(false);
         weaponObjects[index].SetActive(true);
-        weaponObjects[index].GetComponent<Animator>().Play("Idle");
+        weaponObjects[index].GetComponent<Weapon>().ResetMag();
+
+        upgradedWeaponIndex = index;
 
         yield return new WaitForSeconds(second);
 
+        weaponObjects[index].GetComponent<Weapon>().ResetMag();
         weaponObjects[index].SetActive(false);
         weaponObjects[currentWeaponIndex].SetActive(true);
-        weaponObjects[currentWeaponIndex].GetComponent<Animator>().Play("Idle");
+        weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
+        upgradedWeaponIndex = -1;
+
         weaponPowerup = false;
+        savedWeaponRoutine = null;
     }
 
     void UpgradeWeapon()
@@ -332,10 +386,24 @@ public class PlayerManager : MonoBehaviour
         
         currentKills = 0;
         if(currentWeaponIndex == weaponObjects.Length-1) return;
+        weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
         weaponObjects[currentWeaponIndex].SetActive(false);
-        currentWeaponIndex += 1;
+        currentWeaponIndex++;
         weaponObjects[currentWeaponIndex].SetActive(true);
-        weaponObjects[currentWeaponIndex].GetComponent<Animator>().Play("Idle");
+        weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
+    }
+
+    void GiveLazer()
+    {
+        if(isDead) return;
+        
+        currentKills = 0;
+        if(currentWeaponIndex == weaponObjects.Length-1) return;
+        weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
+        weaponObjects[currentWeaponIndex].SetActive(false);
+        currentWeaponIndex = weaponObjects.Length-1;
+        weaponObjects[currentWeaponIndex].SetActive(true);
+        weaponObjects[currentWeaponIndex].GetComponent<Weapon>().ResetMag();
     }
 
     public void DefeatBoss()
@@ -347,12 +415,12 @@ public class PlayerManager : MonoBehaviour
 
     IEnumerator Transition()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         gameplayState.continuePlay = true;
         gameplayState.currentScore = currentScore;
         gameplayState.waveCount = waveCount + 1;
         fade.Play("FadeIn");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.75f);
         SceneManager.LoadScene(1);
     }
 
@@ -369,52 +437,41 @@ public class PlayerManager : MonoBehaviour
         QualitySettings.SetQualityLevel(index, false);
     }
 
-    public void SetReflectionQuality(int index)
-    {
-        switch(index)
-        {
-            case 0:
-                ssReflect.active = false;
-                break;
-            case 1:
-                ssReflect.active = true;
-                ssReflect.preset.value = ScreenSpaceReflectionPreset.Medium;
-                break;
-            case 2:
-                ssReflect.active = true;
-                ssReflect.preset.value = ScreenSpaceReflectionPreset.Overkill;
-                break;
-        }
-    }
-
     public void SetGunCamera(bool active)
     {
         weaponCamera.gameObject.SetActive(active);
         mainCamera.cullingMask = active ? withoutWeaponMask : withWeaponMask;
     }
 
+    public void SetFOV(float value)
+    {
+        mainCamera.fieldOfView = value;
+    }
+
     public void Enhance()
     {
         if(isDead) return;
+
+        if(savedEnhanceRoutine != null) StopCoroutine(savedEnhanceRoutine);
         
         soundSource.PlayOneShot(powerup);
-        StopCoroutine(enhancementTimer());
-        StartCoroutine(enhancementTimer());
+        savedEnhanceRoutine = StartCoroutine(enhancementTimer());
     }
 
     IEnumerator enhancementTimer()
     {
-        enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, 0);
         fishEyeEffect.intensity.value = defaultFishEye;
         abberation.intensity.value = defaultAbberation;
+        vignet.intensity.value = defaultVignette;
         movementScript.isEnhanced = true;
 
         yield return new WaitForSeconds(enhancementTime);
 
-        enhancedEffect.color = new Color(enhancedEffect.color.r, enhancedEffect.color.g, enhancedEffect.color.b, 0.0625f);
         fishEyeEffect.intensity.value = enhanceFishEye;
         abberation.intensity.value = enhanceAbberation;
+        vignet.intensity.value = enhanceVignette;
         movementScript.isEnhanced = false;
+        savedEnhanceRoutine = null;
     }
 
     public void BoostJump(float power)

@@ -61,7 +61,6 @@ MonoBehaviour:
   bulletParent: {fileID: 1144307905731109830}
   bossWeapons: []
   model: {fileID: 0}
-  ScoreReward: 30
 --- !u!54 &1719168131344530711
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -182,7 +181,7 @@ AudioSource:
   m_GameObject: {fileID: 1719168132142928655}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: a0c193202127bb34eaef78746b45c81d, type: 2}
   m_audioClip: {fileID: 8300000, guid: 7ad2dbfadbc8ee44fa4abd63407718f3, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 0.2

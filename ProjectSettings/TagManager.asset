@@ -10,6 +10,7 @@ TagManager:
   - Enemy
   - BossEnemy
   - DroneMovePoint
+  - IgnoreBullet
   layers:
   - Default
   - TransparentFX

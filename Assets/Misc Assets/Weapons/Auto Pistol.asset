@@ -21,11 +21,11 @@ MonoBehaviour:
   spreadFactor: 4
   bulletSpeed: 35
   bulletDamage: 4
-  lineLength: 2.5
+  lineLength: 1
   reloadTime: 0.75
-  recoilMagnitude: -10
-  recoilReturnSpeed: 10
-  recoilSnappines: 5
+  recoilMagnitude: -15
+  recoilReturnSpeed: 7
+  recoilSnappines: 10
   weaponRecoil: 1.75
   swaySmooth: 9
   swayMultiplier: 3
