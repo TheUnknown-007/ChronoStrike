@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerState : ScriptableObject
 {
     public bool DebugSeed = false;
+    public float dmgMultiplier;
     public int resolutionIndex = 0;
     public bool reflectionEnabled = false;
     public bool fullscreen = true;

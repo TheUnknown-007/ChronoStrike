@@ -112,6 +112,7 @@ public class PlayerManager : MonoBehaviour
         vfx.profile.TryGetSettings(out abberation);
         vfx.profile.TryGetSettings(out vignet);
 
+        damageMultiplier = gameplayState.dmgMultiplier;
         SetQuality(gameplayState.graphicQuality);
         SetGunCamera(gameplayState.weaponCamera);
         SetFOV(gameplayState.FOV);

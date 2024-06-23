@@ -11,6 +11,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] Animator Fader;
     [SerializeField] TMP_Dropdown resDropDown;
     [SerializeField] TMP_Dropdown graphicDropDown;
+    [SerializeField] TMP_Dropdown difficultyDropDown;
     [SerializeField] Slider FOVSlider;
     [SerializeField] Slider VolumeSlider;
     [SerializeField] Slider MusicVolumeSlider;
@@ -27,11 +28,29 @@ public class MenuManager : MonoBehaviour
     List<Resolution> selectedRes = new List<Resolution>();
     [SerializeField] List<int> indices = new List<int>();
 
+    Dictionary<int, float> IndiceToDmg = new Dictionary<int, float>{
+        {0, 0.25f},
+        {1, 0.5f},
+        {2, 0.75f},
+        {3, 1f},
+        {4, 1.5f},
+    };
+
+    Dictionary<float, int> DmgToIndice = new Dictionary<float, int>{
+        {0.25f, 0},
+        {0.5f,  1},
+        {0.75f, 2},
+        {1f,    3},
+        {1.5f,  4},
+    };
+
+
     bool isFullScreen = true;
     int currentRes = 0;
 
     void Start()
     {
+        gameplayState.dmgMultiplier = PlayerPrefs.GetFloat("Difficulty", 1);
         gameplayState.graphicQuality = PlayerPrefs.GetInt("GraphicsQuality", 1);
         gameplayState.weaponCamera = PlayerPrefs.GetInt("GunCamera", 1) == 1;
         gameplayState.fullscreen = PlayerPrefs.GetInt("FullScreen", 1) == 1;
@@ -47,6 +66,7 @@ public class MenuManager : MonoBehaviour
 
         isFullScreen = gameplayState.fullscreen;
 
+        difficultyDropDown.SetValueWithoutNotify(DmgToIndice[gameplayState.dmgMultiplier]);
         graphicDropDown.SetValueWithoutNotify(gameplayState.graphicQuality);
         FOVSlider.SetValueWithoutNotify(gameplayState.FOV);
         VolumeSlider.SetValueWithoutNotify(gameplayState.volume);
@@ -150,6 +170,12 @@ public class MenuManager : MonoBehaviour
     {
         gameplayState.reflectionEnabled = active;
         PlayerPrefs.SetInt("EnableReflection", gameplayState.reflectionEnabled ? 1 : 0);
+    }
+
+    public void SetDifficulty(int index)
+    {
+        gameplayState.dmgMultiplier = IndiceToDmg[index];
+        PlayerPrefs.SetFloat("Difficulty", gameplayState.dmgMultiplier);
     }
 
     IEnumerator Transition()

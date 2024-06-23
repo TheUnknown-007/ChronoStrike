@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
     float verticalMovement;
     float horizontalMovement;
 
-    int frameDelay = 0;
+    float frameDelay = 0;
 
     bool walkingOnSlope;
 
@@ -59,11 +59,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if(PlayerManager.instance.isDead) return;
         
-        if(frameDelay == 0) 
+        if(frameDelay <= 0) 
         {
             isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, playerHeight/2+0.1f, groundMask);
             if(isGrounded && !walkingOnSlope) rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-        } else frameDelay--;
+        } else frameDelay -= Time.deltaTime;
 
         moveSpeed = Mathf.Lerp(moveSpeed, isEnhanced ? enhancedSpeed : walkSpeed, acceleration * Time.deltaTime);
         
@@ -104,7 +104,7 @@ public class PlayerMovement : MonoBehaviour
     public void Jump(float power)
     {
         isGrounded = false;
-        frameDelay = 10;
+        frameDelay = 1;
 
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         rb.AddForce(transform.up * power, ForceMode.Impulse);
