@@ -70,6 +70,7 @@ public class PlayerManager : MonoBehaviour
 
     LensDistortion fishEyeEffect;
     ChromaticAberration abberation;
+    ScreenSpaceReflections ssReflect;
     Vignette vignet;
 
     int currentKills = 0;
@@ -112,6 +113,7 @@ public class PlayerManager : MonoBehaviour
 
         vfx.profile.TryGetSettings(out fishEyeEffect);
         vfx.profile.TryGetSettings(out abberation);
+        vfx.profile.TryGetSettings(out ssReflect);
         vfx.profile.TryGetSettings(out vignet);
 
         damageMultiplier = damageMultipliers[gameplayState.dmgMultiplier];
@@ -437,6 +439,23 @@ public class PlayerManager : MonoBehaviour
 
     public void SetQuality(int index)
     {
+        switch(index)
+        {
+            case 0: 
+                ssReflect.active = false;
+                break;
+            case 1: 
+                ssReflect.active = false;
+                break;
+            case 2: 
+                ssReflect.active = true;
+                ssReflect.preset.value = ScreenSpaceReflectionPreset.Medium;
+                break;
+            case 3: 
+                ssReflect.active = true;
+                ssReflect.preset.value = ScreenSpaceReflectionPreset.Overkill;
+                break;
+        }
         QualitySettings.SetQualityLevel(index, false);
     }
 

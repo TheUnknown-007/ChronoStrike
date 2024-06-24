@@ -42,6 +42,9 @@ public class MenuManager : MonoBehaviour
         gameplayState.FOV = PlayerPrefs.GetFloat("FOV", 90);
         gameplayState.sensitivity = PlayerPrefs.GetFloat("Sensitivity", 120);
 
+        gameplayState.reflections = gameplayState.graphicQuality - 1;
+        gameplayState.reflections = gameplayState.reflections <= 0 ? 0 : gameplayState.reflections;
+
         gameplayState.volume = PlayerPrefs.GetFloat("Volume", 100);
         gameplayState.musicVolume = PlayerPrefs.GetFloat("MusicVolume", 100);
         if(gameplayState.volume < 1) gameplayState.volume = 0.001f;
@@ -101,6 +104,8 @@ public class MenuManager : MonoBehaviour
     public void SetQuality(int index)
     {
         gameplayState.graphicQuality = index;
+        gameplayState.reflections = index - 1;
+        gameplayState.reflections = gameplayState.reflections <= 0 ? 0 : gameplayState.reflections;
         PlayerPrefs.SetInt("GraphicsQuality", gameplayState.graphicQuality);
     }
 

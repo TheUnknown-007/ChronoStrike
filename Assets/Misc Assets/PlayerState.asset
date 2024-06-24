@@ -12,13 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49c0d1a648020b449fdb08c6d8a96de, type: 3}
   m_Name: PlayerState
   m_EditorClassIdentifier: 
-  DebugSeed: 0
-  dmgMultiplier: 1.5
+  sensitivity: 100
+  dmgMultiplier: 1
+  reflections: 1
   resolutionIndex: 17
   reflectionEnabled: 1
   fullscreen: 1
   weaponCamera: 1
-  graphicQuality: 1
+  graphicQuality: 2
   FOV: 90
   volume: 1
   musicVolume: 1
