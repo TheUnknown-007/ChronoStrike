@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49c0d1a648020b449fdb08c6d8a96de, type: 3}
   m_Name: PlayerState
   m_EditorClassIdentifier: 
+  DebugSeed: 0
+  dmgMultiplier: 1.5
   resolutionIndex: 17
   reflectionEnabled: 1
   fullscreen: 1

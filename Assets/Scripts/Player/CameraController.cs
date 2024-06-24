@@ -1,9 +1,11 @@
+using UnityEditor;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField] float sensX = 6f;
     [SerializeField] float sensY = 6f;
+    [SerializeField] PlayerState settings;
     [SerializeField] Transform mainCamera;
     [SerializeField] Transform camTransform;
     [SerializeField] Transform camPos;
@@ -21,6 +23,8 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        sensX = settings.sensitivity;
+        sensY = settings.sensitivity;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         currentPos = camPos;

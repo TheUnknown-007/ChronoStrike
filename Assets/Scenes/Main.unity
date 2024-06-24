@@ -9202,6 +9202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensX: 100
   sensY: 100
+  settings: {fileID: 11400000, guid: c47b214d8e6b1104c919c4d9a948a934, type: 2}
   mainCamera: {fileID: 691664977}
   camTransform: {fileID: 184487453}
   camPos: {fileID: 5447156913968520579}

@@ -24,7 +24,6 @@ public class RoomBehaviour : MonoBehaviour
     [HideInInspector] public bool[] currentStatus {get; private set;}
     [HideInInspector] public int id {get; private set;}
 
-
     [HideInInspector] public bool[] dronePointUsed;
     List<Enemy> dronesSpawned = new List<Enemy>();
     public Dictionary<float, int> unsortedDroneMoveScores = new Dictionary<float, int>();
@@ -64,7 +63,7 @@ public class RoomBehaviour : MonoBehaviour
         // ====================== Sentry Spawn ===========================
         // ===============================================================
         int index;
-        if(Random.Range(0, 4) != 0)
+        if(Random.Range(0, 3) != 0)
         {
             index = Random.Range(0, sentrySpawns.Length-1);
             Instantiate(sentryPrefab, sentrySpawns[index].position, sentrySpawns[index].rotation, transform).GetComponent<Enemy>().Init(new ScriptableWeapon[] {SentryWeapon}, 30, 3, null, this, 0);
@@ -86,7 +85,7 @@ public class RoomBehaviour : MonoBehaviour
         // ======================= Enemy Spawn ===========================
         // ===============================================================
         bool[] usedPoints = new bool[enemySpawns.Length];
-        int count = Random.Range(2, Mathf.FloorToInt(enemySpawns.Length/3));
+        int count = Random.Range(1, Mathf.FloorToInt(enemySpawns.Length/3));
         int x=0;
         while(x<count)
         {
@@ -196,7 +195,6 @@ public class RoomBehaviour : MonoBehaviour
                 x+=1;
             }
         }
-        CheckDroneScores();
     }
 
     bool CheckAllSpawnUsed(bool[] usedPoints)
@@ -206,21 +204,8 @@ public class RoomBehaviour : MonoBehaviour
         return true;
     }
 
-    public void CheckDroneScores()
-    {
-        for(int i = 0; i < droneMovePoints.Length; i++)
-        {
-            float score = Vector3.Distance(PlayerManager.instance.transform.position, droneMovePoints[i].position);
-            score *= Physics.Raycast(droneMovePoints[i].position, PlayerManager.instance.transform.position - droneMovePoints[i].position) ? 1 : 4;
-            unsortedDroneMoveScores[score] = i;
-            droneMovePoints[i].gameObject.GetComponent<DebugDronePoint>().pointScore = score;
-        }
-        sortedDroneMoveScores = new SortedList<float, int>(unsortedDroneMoveScores);
-    }
-
     public void RefreshRoom(bool active)
     {
-        CheckDroneScores();
         foreach(Enemy drone in dronesSpawned)
         {
             if(!drone) continue;

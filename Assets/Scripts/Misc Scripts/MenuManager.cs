@@ -12,6 +12,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] TMP_Dropdown resDropDown;
     [SerializeField] TMP_Dropdown graphicDropDown;
     [SerializeField] TMP_Dropdown difficultyDropDown;
+    [SerializeField] Slider sensitivitySlider;
     [SerializeField] Slider FOVSlider;
     [SerializeField] Slider VolumeSlider;
     [SerializeField] Slider MusicVolumeSlider;
@@ -28,34 +29,18 @@ public class MenuManager : MonoBehaviour
     List<Resolution> selectedRes = new List<Resolution>();
     [SerializeField] List<int> indices = new List<int>();
 
-    Dictionary<int, float> IndiceToDmg = new Dictionary<int, float>{
-        {0, 0.25f},
-        {1, 0.5f},
-        {2, 0.75f},
-        {3, 1f},
-        {4, 1.5f},
-    };
-
-    Dictionary<float, int> DmgToIndice = new Dictionary<float, int>{
-        {0.25f, 0},
-        {0.5f,  1},
-        {0.75f, 2},
-        {1f,    3},
-        {1.5f,  4},
-    };
-
-
     bool isFullScreen = true;
     int currentRes = 0;
 
     void Start()
     {
-        gameplayState.dmgMultiplier = PlayerPrefs.GetFloat("Difficulty", 1);
+        gameplayState.dmgMultiplier = PlayerPrefs.GetInt("Difficulty", 3);
         gameplayState.graphicQuality = PlayerPrefs.GetInt("GraphicsQuality", 1);
         gameplayState.weaponCamera = PlayerPrefs.GetInt("GunCamera", 1) == 1;
         gameplayState.fullscreen = PlayerPrefs.GetInt("FullScreen", 1) == 1;
         gameplayState.reflectionEnabled = PlayerPrefs.GetInt("EnableReflection", 1) == 1;
         gameplayState.FOV = PlayerPrefs.GetFloat("FOV", 90);
+        gameplayState.sensitivity = PlayerPrefs.GetFloat("Sensitivity", 120);
 
         gameplayState.volume = PlayerPrefs.GetFloat("Volume", 100);
         gameplayState.musicVolume = PlayerPrefs.GetFloat("MusicVolume", 100);
@@ -66,11 +51,12 @@ public class MenuManager : MonoBehaviour
 
         isFullScreen = gameplayState.fullscreen;
 
-        difficultyDropDown.SetValueWithoutNotify(DmgToIndice[gameplayState.dmgMultiplier]);
+        difficultyDropDown.SetValueWithoutNotify(gameplayState.dmgMultiplier);
         graphicDropDown.SetValueWithoutNotify(gameplayState.graphicQuality);
         FOVSlider.SetValueWithoutNotify(gameplayState.FOV);
         VolumeSlider.SetValueWithoutNotify(gameplayState.volume);
         MusicVolumeSlider.SetValueWithoutNotify(gameplayState.musicVolume);
+        sensitivitySlider.SetValueWithoutNotify(gameplayState.sensitivity);
 
         fullscreenToggle.SetIsOnWithoutNotify(gameplayState.fullscreen);
         gunCamToggle.SetIsOnWithoutNotify(gameplayState.weaponCamera);
@@ -116,6 +102,12 @@ public class MenuManager : MonoBehaviour
     {
         gameplayState.graphicQuality = index;
         PlayerPrefs.SetInt("GraphicsQuality", gameplayState.graphicQuality);
+    }
+
+    public void SetSensitivity(float value)
+    {
+        gameplayState.sensitivity = value;
+        PlayerPrefs.SetFloat("Sensitivity", gameplayState.sensitivity);
     }
 
     public void SetVolume(float _value)
@@ -174,8 +166,8 @@ public class MenuManager : MonoBehaviour
 
     public void SetDifficulty(int index)
     {
-        gameplayState.dmgMultiplier = IndiceToDmg[index];
-        PlayerPrefs.SetFloat("Difficulty", gameplayState.dmgMultiplier);
+        gameplayState.dmgMultiplier = index;
+        PlayerPrefs.SetInt("Difficulty", gameplayState.dmgMultiplier);
     }
 
     IEnumerator Transition()

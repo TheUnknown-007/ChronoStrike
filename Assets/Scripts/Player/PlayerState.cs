@@ -3,8 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerState", menuName = "Gameplay")]
 public class PlayerState : ScriptableObject
 {
-    public bool DebugSeed = false;
-    public float dmgMultiplier;
+    public float sensitivity = 6f;
+    public int dmgMultiplier;
     public int resolutionIndex = 0;
     public bool reflectionEnabled = false;
     public bool fullscreen = true;

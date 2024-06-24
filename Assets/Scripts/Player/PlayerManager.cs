@@ -9,6 +9,8 @@ using static System.Math;
 
 public class PlayerManager : MonoBehaviour
 {
+
+    float[] damageMultipliers = new float[] { 0.2f, 0.45f, 0.65f, 0.9f, 1.5f };
     public static PlayerManager instance {get; private set;}
 
 
@@ -112,7 +114,7 @@ public class PlayerManager : MonoBehaviour
         vfx.profile.TryGetSettings(out abberation);
         vfx.profile.TryGetSettings(out vignet);
 
-        damageMultiplier = gameplayState.dmgMultiplier;
+        damageMultiplier = damageMultipliers[gameplayState.dmgMultiplier];
         SetQuality(gameplayState.graphicQuality);
         SetGunCamera(gameplayState.weaponCamera);
         SetFOV(gameplayState.FOV);

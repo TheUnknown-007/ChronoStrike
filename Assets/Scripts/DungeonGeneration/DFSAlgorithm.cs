@@ -215,7 +215,6 @@ public class DFSAlgorithm : MonoBehaviour
         {
             Debug.LogError("Boss wasn't spawned, retrying. Bad Seed");
             Debug.Log(Random.seed);
-            settings.DebugSeed = true;
             SceneManager.LoadScene(1);
         }
 
