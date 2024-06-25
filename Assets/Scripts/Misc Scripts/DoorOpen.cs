@@ -35,12 +35,14 @@ public class DoorOpen : MonoBehaviour
     
     void OnTriggerEnter(Collider other)
     {
+        Debug.Log("Object entered: ", other.gameObject);
         if(!other.CompareTag("Player")) return;
         SetDestination(true);
     }
 
     void OnTriggerExit(Collider other)
     {
+        Debug.Log("Object exitted: ", other.gameObject);
         if(!other.CompareTag("Player")) return;
         SetDestination(false);
     }

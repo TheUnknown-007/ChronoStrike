@@ -24,11 +24,6 @@ public class Weapon : MonoBehaviour
         firing = false;
     }
 
-    void OnEnable()
-    {
-        PlayerManager.instance.AmmoChange(weaponData.magSize, weaponData.magSize);
-    }
-
     void Update()
     {
         // Weapon Sway
@@ -86,8 +81,6 @@ public class Weapon : MonoBehaviour
 
     void ShootWeapon()
     {
-        PlayerManager.instance.AddRecoil(weaponData.recoilMagnitude, weaponData.weaponRecoil, weaponData.recoilReturnSpeed, weaponData.recoilSnappines);
-        PlayerManager.instance.AmmoChange(weaponData.magSize, magCount);
         audioSource.PlayOneShot(weaponData.gunSound);
         float xRot = Random.Range(-weaponData.spreadFactor, weaponData.spreadFactor);
         float yRot = Random.Range(-weaponData.spreadFactor, weaponData.spreadFactor);
@@ -110,7 +103,6 @@ public class Weapon : MonoBehaviour
         yield return new WaitForSeconds(weaponData.reloadTime);
         GunAnim.Play("Idle");
         magCount = weaponData.magSize;
-        PlayerManager.instance.AmmoChange(weaponData.magSize, magCount);
         canFire = true;
         reloading = false;
     }
@@ -120,7 +112,6 @@ public class Weapon : MonoBehaviour
         StopAllCoroutines();
         GunAnim.Play("Idle");
         magCount = weaponData.magSize;
-        PlayerManager.instance.AmmoChange(weaponData.magSize, magCount);
         firing = false;
         reloading = false;
         canFire = true;

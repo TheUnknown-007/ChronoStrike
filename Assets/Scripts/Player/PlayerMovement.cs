@@ -57,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if(PlayerManager.instance.isDead) return;
         
         if(frameDelay <= 0) 
         {

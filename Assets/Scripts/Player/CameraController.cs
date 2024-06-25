@@ -32,7 +32,6 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if(PlayerManager.instance.isDead) return;
 
         if(Input.GetButtonDown("Fire1"))
         {

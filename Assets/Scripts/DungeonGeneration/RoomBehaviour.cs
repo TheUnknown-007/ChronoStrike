@@ -29,8 +29,9 @@ public class RoomBehaviour : MonoBehaviour
     public Dictionary<float, int> unsortedDroneMoveScores = new Dictionary<float, int>();
     public SortedList<float, int> sortedDroneMoveScores;
 
-    public void UpdateRoom(int ID, bool[] Status, bool boss, GameObject sentryPrefab, GameObject enemyPrefab, GameObject dronePrefab, GameObject bossPrefab, Slider healthSlider)
+    public void UpdateRoom(int seed, int ID, bool[] Status, bool boss, GameObject sentryPrefab, GameObject enemyPrefab, GameObject dronePrefab, GameObject bossPrefab, Slider healthSlider)
     {
+        Random.InitState(seed);
         for(int i = 0; i < 4; i++)
         {
             doors[i].SetActive(Status[i]);
@@ -159,41 +160,6 @@ public class RoomBehaviour : MonoBehaviour
             Enemy drone = Instantiate(dronePrefab, droneMovePoints[index2].position, droneMovePoints[index2].rotation, transform).GetComponent<Enemy>();
             drone.Init(new ScriptableWeapon[] {EnemyWeapons[index]}, 30, fireDelay, null, this, index2);
             dronesSpawned.Add(drone);
-        }
-
-        // ===============================================================
-        // ===================== Powerup Spawn ===========================
-        // ===============================================================
-        if(Random.Range(0, 4) != 0)
-        {
-            x = 0;
-            count = Random.Range(1, 3);
-            usedPoints = new bool[PowerupSpawns.Length];
-            while(x < count)
-            {
-                if(CheckAllSpawnUsed(usedPoints)) break;
-                do index = Random.Range(0, PowerupSpawns.Length); while(usedPoints[index]);
-
-                usedPoints[index] = true;
-                Instantiate(Powerups[x], PowerupSpawns[index].position, PowerupSpawns[index].rotation, transform);
-                x+=1;
-            }
-
-            if(Random.Range(0, 3) == 0 && !CheckAllSpawnUsed(usedPoints))
-            {
-                do index = Random.Range(0, PowerupSpawns.Length); while(usedPoints[index]);
-                usedPoints[index] = true;
-                Instantiate(Powerups[2], PowerupSpawns[index].position, PowerupSpawns[index].rotation, transform);
-                x+=1;
-            }
-
-            if(Random.Range(0, 6) == 0 && !CheckAllSpawnUsed(usedPoints))
-            {
-                do index = Random.Range(0, PowerupSpawns.Length); while(usedPoints[index]);
-                usedPoints[index] = true;
-                Instantiate(Powerups[Random.Range(Powerups.Length-2, Powerups.Length)], PowerupSpawns[index].position, PowerupSpawns[index].rotation, transform);
-                x+=1;
-            }
         }
     }
 

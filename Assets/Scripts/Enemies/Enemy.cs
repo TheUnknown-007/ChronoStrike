@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour
     GameObject player;
     RaycastHit hit;
     float FireDelay;
-    int reward;
     float currentHealth;
     float totalHealth;
     ScriptableWeapon[] currentWeapons;
@@ -38,11 +37,6 @@ public class Enemy : MonoBehaviour
 
     public void Init(ScriptableWeapon[] weapon, float health, float fireDelay, Slider healthSlider, RoomBehaviour roomSpawner, int pointIndex)
     {
-        if(health <= 10) reward = 10;
-        else if(health > 10 && health < 20) reward = 20;
-        else if(health >= 30) reward = 50;
-        else reward = 70;
-
         initialPosition = transform.position;
 
         currentHealth = health;
@@ -52,7 +46,6 @@ public class Enemy : MonoBehaviour
 
         if(type == 1)
         {
-            reward = 500;
             totalHealth = health;
             HealthSlider = healthSlider;
             bossWeapons[0].Init(weapon[0], fireDelay*2);
@@ -134,7 +127,7 @@ public class Enemy : MonoBehaviour
             {
                 if(Physics.Raycast(bW.bulletPoint.position, bW.bulletPoint.transform.forward, out hit, 1000, bW.visiblityMask))
                 {
-                    if(hit.collider.CompareTag("Player") && !PlayerManager.instance.isDead)
+                    if(hit.collider.CompareTag("Player"))
                     {
                         found = true;
                         break;
@@ -160,7 +153,7 @@ public class Enemy : MonoBehaviour
 
         if(Physics.Raycast(bulletPoint.position, bulletPoint.transform.forward, out hit, 1000, visiblityMask))
         {
-            if(hit.collider.CompareTag("Player") && !PlayerManager.instance.isDead)
+            if(hit.collider.CompareTag("Player"))
             {
                 if(firing) return;
                 firing = true;
@@ -218,8 +211,6 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         alive = false;
-        PlayerManager.instance.AddScore(reward);
-        if(type == 1) PlayerManager.instance.DefeatBoss();
         CameraEffects.ShakeOnce();
         Destroy(Instantiate(explosion, transform.position, transform.rotation), 3);
         Destroy(gameObject);
@@ -262,11 +253,5 @@ public class Enemy : MonoBehaviour
             }
             yield return new WaitForSeconds(FireDelay);
         }
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if(!other.transform.CompareTag("Player") || type != 1) return;
-        PlayerManager.instance.TriggerBoss();
     }
 }

@@ -57,8 +57,7 @@ public class Bullet : MonoBehaviour
         }
         else if(Typee == 1)
         {
-            if(other.gameObject.CompareTag("Player")) PlayerManager.instance.AddDamage(BulletDamage);
-            else if(other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("BossEnemy")) return;
+            if(other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("BossEnemy")) return;
         }
 
         Destroy(Instantiate(ImpactParticles, transform.position, transform.rotation), 2);
@@ -74,7 +73,6 @@ public class Bullet : MonoBehaviour
             else
             {
                 if(!hitCollider.CompareTag("Player")) continue;
-                PlayerManager.instance.AddDamage(CollateralDamage);
             }
         }
         StopAllCoroutines();

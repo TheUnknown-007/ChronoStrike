@@ -46,13 +46,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f09ac3898228f43b665ca3fc4cbed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 364776266275441260, guid: 955f9b56adb8a7c4abd2819c915d7b33, type: 3}
   visiblityMask:
     serializedVersion: 2
     m_Bits: 705
   gunSource: {fileID: 7179846035022300411}
-  bulletPoint: {fileID: 2659435766140294414}
   bulletParent: {fileID: 2659435766140294414}
+  bulletPoint: {fileID: 2659435766140294414}
+  firing: 0
 --- !u!1 &1885181636734689851
 GameObject:
   m_ObjectHideFlags: 0
@@ -66,7 +66,6 @@ GameObject:
   - component: {fileID: 5870459014280154530}
   - component: {fileID: 4316236359154262086}
   - component: {fileID: 8799704786459404733}
-  - component: {fileID: 8619511549458701193}
   m_Layer: 2
   m_Name: Base
   m_TagString: Untagged
@@ -181,18 +180,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8619511549458701193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885181636734689851}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 07b1cab15f722be45a8b057a1011e434, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1898716255305075750
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,13 +226,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f09ac3898228f43b665ca3fc4cbed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 364776266275441260, guid: 955f9b56adb8a7c4abd2819c915d7b33, type: 3}
   visiblityMask:
     serializedVersion: 2
     m_Bits: 705
   gunSource: {fileID: 8877929445747378266}
-  bulletPoint: {fileID: 7901253548938513143}
   bulletParent: {fileID: 7901253548938513143}
+  bulletPoint: {fileID: 7901253548938513143}
+  firing: 0
 --- !u!1 &1999514579284729577
 GameObject:
   m_ObjectHideFlags: 0
@@ -430,13 +417,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f09ac3898228f43b665ca3fc4cbed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 364776266275441260, guid: 955f9b56adb8a7c4abd2819c915d7b33, type: 3}
   visiblityMask:
     serializedVersion: 2
     m_Bits: 705
   gunSource: {fileID: 9055448573878325254}
-  bulletPoint: {fileID: 1777924409273295385}
   bulletParent: {fileID: 1777924409273295385}
+  bulletPoint: {fileID: 1777924409273295385}
+  firing: 0
 --- !u!1 &4900821069648430451
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +652,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  orbitSpeed: 0
   moveSpeed: 0
   explosion: {fileID: 364776266275441260, guid: 6b57568f6fbd4e446a140ac5387ada02, type: 3}
   visiblityMask:
@@ -726,13 +714,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f09ac3898228f43b665ca3fc4cbed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 364776266275441260, guid: 955f9b56adb8a7c4abd2819c915d7b33, type: 3}
   visiblityMask:
     serializedVersion: 2
     m_Bits: 705
   gunSource: {fileID: 758504893186061879}
-  bulletPoint: {fileID: 9032454669649465207}
   bulletParent: {fileID: 9032454669649465207}
+  bulletPoint: {fileID: 9032454669649465207}
+  firing: 0
 --- !u!1 &6256874658219865997
 GameObject:
   m_ObjectHideFlags: 0
@@ -1256,13 +1244,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1f09ac3898228f43b665ca3fc4cbed2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  explosion: {fileID: 364776266275441260, guid: 955f9b56adb8a7c4abd2819c915d7b33, type: 3}
   visiblityMask:
     serializedVersion: 2
     m_Bits: 705
   gunSource: {fileID: 9139766911730315087}
-  bulletPoint: {fileID: 4161466025368171097}
   bulletParent: {fileID: 4161466025368171097}
+  bulletPoint: {fileID: 4161466025368171097}
+  firing: 0
 --- !u!1 &8509145416396516169
 GameObject:
   m_ObjectHideFlags: 0
