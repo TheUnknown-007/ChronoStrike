@@ -20,7 +20,7 @@ MonoBehaviour:
   bulletsPerBurst: 1
   spreadFactor: 0
   bulletSpeed: 40
-  bulletDamage: 30
+  bulletDamage: 40
   lineLength: 3
   reloadTime: 1.5
   recoilMagnitude: -25

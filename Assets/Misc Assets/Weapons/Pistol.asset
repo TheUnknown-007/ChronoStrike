@@ -21,7 +21,7 @@ MonoBehaviour:
   spreadFactor: 0
   bulletSpeed: 30
   bulletDamage: 7.5
-  lineLength: 2.5
+  lineLength: 0.75
   reloadTime: 0.75
   recoilMagnitude: -10
   recoilReturnSpeed: 7
