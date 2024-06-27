@@ -145,7 +145,7 @@ public class PlayerManager : MonoBehaviour
             
         }
         else waveCounter.text = "Wave: 1";
-        Music[Mathf.FloorToInt(Random.Range(0, Music.Length-1))].Play();
+        Music[Random.Range(0, Music.Length)].Play();
     }
 
     void Update()
