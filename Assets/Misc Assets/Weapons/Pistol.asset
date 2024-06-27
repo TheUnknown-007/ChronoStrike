@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeKills: 2
   automatic: 0
   magSize: 17
-  fireRate: 0.15
+  fireRate: 0.2
   burstRate: 0
   bulletsPerBurst: 1
   spreadFactor: 0
