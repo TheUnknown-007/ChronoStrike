@@ -3341,7 +3341,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 24300002, guid: 99b14cba36f6d0f4bb4bad81b5a7be0a, type: 2}
-  m_audioClip: {fileID: 8300000, guid: 26556f7bef920dd4f88bd58e4cb189b6, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 691af2681fe4d3d4f9a88e8010770dab, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.5
   m_Pitch: 1
@@ -3860,7 +3860,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 514504371}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: SetGunCamera
+        m_MethodName: SetReflections
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
