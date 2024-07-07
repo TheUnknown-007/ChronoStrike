@@ -9,14 +9,12 @@ using UnityEngine.Audio;
 public class MenuManager : MonoBehaviour
 {
     [SerializeField] Animator Fader;
-    [SerializeField] TMP_Dropdown resDropDown;
     [SerializeField] TMP_Dropdown graphicDropDown;
     [SerializeField] TMP_Dropdown difficultyDropDown;
     [SerializeField] Slider sensitivitySlider;
     [SerializeField] Slider FOVSlider;
     [SerializeField] Slider VolumeSlider;
     [SerializeField] Slider MusicVolumeSlider;
-    [SerializeField] Toggle fullscreenToggle;
     [SerializeField] Toggle gunCamToggle;
     [SerializeField] Toggle reflectionToggle;
     [SerializeField] GameObject SettingsMenu;
@@ -25,19 +23,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] AudioMixer masterMixer;
     [SerializeField] AudioMixer musicMixer;
 
-    Resolution[] allRes;
-    List<Resolution> selectedRes = new List<Resolution>();
-    [SerializeField] List<int> indices = new List<int>();
-
-    bool isFullScreen = true;
-    int currentRes = 0;
 
     void Start()
     {
         gameplayState.dmgMultiplier = PlayerPrefs.GetInt("Difficulty", 3);
         gameplayState.graphicQuality = PlayerPrefs.GetInt("GraphicsQuality", 1);
         gameplayState.weaponCamera = PlayerPrefs.GetInt("GunCamera", 1) == 1;
-        gameplayState.fullscreen = PlayerPrefs.GetInt("FullScreen", 1) == 1;
         gameplayState.reflectionEnabled = PlayerPrefs.GetInt("EnableReflection", 1) == 1;
         gameplayState.FOV = PlayerPrefs.GetFloat("FOV", 90);
         gameplayState.sensitivity = PlayerPrefs.GetFloat("Sensitivity", 120);
@@ -52,8 +43,6 @@ public class MenuManager : MonoBehaviour
         musicMixer.SetFloat("MusicVolume", Mathf.Log10(gameplayState.musicVolume / 100) * 20f);
         masterMixer.SetFloat("MasterVolume", Mathf.Log10(gameplayState.volume / 100) * 20f);
 
-        isFullScreen = gameplayState.fullscreen;
-
         difficultyDropDown.SetValueWithoutNotify(gameplayState.dmgMultiplier);
         graphicDropDown.SetValueWithoutNotify(gameplayState.graphicQuality);
         FOVSlider.SetValueWithoutNotify(gameplayState.FOV);
@@ -61,31 +50,8 @@ public class MenuManager : MonoBehaviour
         MusicVolumeSlider.SetValueWithoutNotify(gameplayState.musicVolume);
         sensitivitySlider.SetValueWithoutNotify(gameplayState.sensitivity);
 
-        fullscreenToggle.SetIsOnWithoutNotify(gameplayState.fullscreen);
         gunCamToggle.SetIsOnWithoutNotify(gameplayState.weaponCamera);
         reflectionToggle.SetIsOnWithoutNotify(gameplayState.reflectionEnabled);
-        
-        indices.Clear();
-        resDropDown.ClearOptions();
-        allRes = Screen.resolutions;
-        List<string> resList = new List<string>();
-        string tempRes;
-        foreach(Resolution res in allRes)
-        {
-            tempRes = res.width + "x" + res.height;
-            if(resList.Contains(tempRes)) continue;
-
-            resList.Add(tempRes);
-            selectedRes.Add(res);
-            
-            if(Screen.currentResolution.width == res.width && Screen.currentResolution.height == res.height)
-                currentRes = selectedRes.Count - 1;
-        }
-        currentRes = PlayerPrefs.GetInt("Resolution", currentRes);
-        gameplayState.resolutionIndex = currentRes;
-        Screen.SetResolution(selectedRes[currentRes].width, selectedRes[currentRes].height, isFullScreen);
-        resDropDown.AddOptions(resList);
-        resDropDown.SetValueWithoutNotify(currentRes);
     }
 
     public void StartGame()
@@ -97,8 +63,6 @@ public class MenuManager : MonoBehaviour
     {
         SettingsMenu.SetActive(active);
         MainMenu.SetActive(!active);
-        
-        if(!active) Screen.SetResolution(selectedRes[currentRes].width, selectedRes[currentRes].height, isFullScreen);
     }
 
     public void SetQuality(int index)
@@ -139,22 +103,6 @@ public class MenuManager : MonoBehaviour
     {
         gameplayState.FOV = value;
         PlayerPrefs.SetFloat("FOV", gameplayState.FOV);
-    }
-
-    public void SetResolution(int index)
-    {
-        currentRes = index;
-        gameplayState.resolutionIndex = index;
-        Screen.SetResolution(selectedRes[currentRes].width, selectedRes[currentRes].height, isFullScreen);
-        PlayerPrefs.SetInt("Resolution", gameplayState.resolutionIndex);
-    }
-
-    public void SetFullScreen(bool active)
-    {
-        isFullScreen = active;
-        gameplayState.fullscreen = active;
-        Screen.SetResolution(selectedRes[currentRes].width, selectedRes[currentRes].height, isFullScreen);
-        PlayerPrefs.SetInt("FullScreen", gameplayState.fullscreen ? 1 : 0);
     }
 
     public void SetGunCamera(bool active)

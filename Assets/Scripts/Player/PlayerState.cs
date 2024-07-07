@@ -6,9 +6,7 @@ public class PlayerState : ScriptableObject
     public float sensitivity = 6f;
     public int dmgMultiplier;
     public int reflections = 0;
-    public int resolutionIndex = 0;
     public bool reflectionEnabled = false;
-    public bool fullscreen = true;
     public bool weaponCamera = true;
     public int graphicQuality = 1;
     public float FOV = 90;
