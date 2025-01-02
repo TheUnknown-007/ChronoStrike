@@ -4,3 +4,9 @@
 *.cs linguist-language=C#
 *.compute linguist-language=hlsl
 *.shader linguist-language=hlsl
+Assets/ExternalAssets/* linguist-vendored
+BlendFiles/* linguist-vendored
+
+# Ignore ShaderLab-related files
+*.cginc linguist-language=hlsl
+*.cg linguist-language=hlsl
