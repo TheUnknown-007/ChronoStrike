@@ -3,3 +3,4 @@
 
 *.cs linguist-language=C#
 *.compute linguist-language=hlsl
+*.shader linguist-language=hlsl
