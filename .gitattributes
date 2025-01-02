@@ -1,12 +1,13 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
-*.cs linguist-language=C#
-*.compute linguist-language=hlsl
-*.shader linguist-language=hlsl
 Assets/ExternalAssets/* linguist-vendored
 BlendFiles/* linguist-vendored
 
+*.cs linguist-language=C#
+
 # Ignore ShaderLab-related files
-*.cginc linguist-language=hlsl
-*.cg linguist-language=hlsl
+*.shader linguist-detectable=false
+*.hlsl linguist-detectable=false
+*.cginc linguist-detectable=false
+*.cg linguist-detectable=false
